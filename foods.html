@@ -9,7 +9,7 @@
       --bg-dark: #121212;
       --text-light: #212529;
       --text-dark: #f1f1f1;
-      --accent: #0fbfae;
+      --accent: #888;
       --correct: #d1fae5;
       --incorrect: #fee2e2;
       --blocked: #333;
@@ -49,6 +49,7 @@
       border-radius: 6px;
       cursor: pointer;
       font-weight: bold;
+      transition: background-color 0.3s ease;
     }
 
     button:hover {
@@ -142,6 +143,7 @@
     <button onclick="checkAnswers()">Check Answers</button>
     <button onclick="clearGrid()">Erase All Letters</button>
     <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    <button onclick="location.href='index.html'">Go Back</button>
   </div>
 
   <div class="crossword-container">
@@ -309,6 +311,11 @@
       document.body.classList.toggle("dark");
       document.body.classList.toggle("light");
     }
+
+    buildGrid();
+  </script>
+</body>
+</html>
 
     buildGrid();
   </script>
