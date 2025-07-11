@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Foods Crossword</title>
+  <style>
+    :root {
+      --bg-light: #f8f9fa;
+      --bg-dark: #121212;
+      --text-light: #212529;
+      --text-dark: #f1f1f1;
+      --accent: #0fbfae;
+      --correct: #d1fae5;
+      --incorrect: #fee2e2;
+      --blocked: #333;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Segoe UI', sans-serif;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.light {
+      background-color: var(--bg-light);
+      color: var(--text-light);
+    }
+
+    body.dark {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    h1 {
+      color: var(--accent);
+    }
+
+    .buttons {
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 16px;
+      margin-right: 10px;
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #0aa99d;
+    }
+
+    .crossword-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(20, 34px);
+      grid-template-rows: repeat(20, 34px);
+    }
+
+    .cell {
+      position: relative;
+      width: 34px;
+      height: 34px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+    }
+
+    .cell input {
+      width: 100%;
+      height: 100%;
+      font-size: 18px;
+      text-align: center;
+      text-transform: uppercase;
+      background: transparent;
+      color: inherit;
+      border: none;
+    }
+
+    .cell input:focus {
+      outline: 2px solid var(--accent);
+      background-color: #e6fffa;
+    }
+
+    .blocked {
+      background-color: var(--blocked);
+    }
+
+    .number {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      font-size: 10px;
+      color: #777;
+    }
+
+    .correct input {
+      background-color: var(--correct);
+      color: green;
+      font-weight: bold;
+    }
+
+    .incorrect input {
+      background-color: var(--incorrect);
+      color: red;
+    }
+
+    .clues {
+      flex: 1;
+    }
+
+    .clues h2 {
+      margin-top: 0;
+    }
+
+    .clues ul {
+      padding-left: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        transform: scale(0.8);
+        transform-origin: top left;
+      }
+    }
+  </style>
+</head>
+<body class="light">
+  <h1>Foods</h1>
+  <p>Complete the crossword puzzle below. The verbs are written without the word "to" (in Romanian: "a").</p>
+
+  <div class="buttons">
+    <button onclick="checkAnswers()">Check Answers</button>
+    <button onclick="clearGrid()">Erase All Letters</button>
+    <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+  </div>
+
+  <div class="crossword-container">
+    <div class="grid" id="grid"></div>
+    <div class="clues">
+      <h2>Across</h2>
+      <ul id="across-clues"></ul>
+      <h2>Down</h2>
+      <ul id="down-clues"></ul>
+    </div>
+  </div>
+
+  <script>
+    const SIZE = 20;
+    const gridEl = document.getElementById("grid");
+    const acrossClues = document.getElementById("across-clues");
+    const downClues = document.getElementById("down-clues");
+    const inputMap = {};
+    const words = [];
+
+    const clues = {
+      across: [
+        { num: 2, clue: "Fat spread made from cream", row: 1, col: 17, answer: "UNT" },
+        { num: 7, clue: "A red or green round fruit", row: 4, col: 12, answer: "MAR" },
+        { num: 8, clue: "Warm liquid dish, often with veggies", row: 4, col: 16, answer: "SUPA" },
+        { num: 9, clue: "To consume food", row: 5, col: 6, answer: "MANCA" },
+        { num: 10, clue: "To try the flavor", row: 6, col: 0, answer: "GUSTA" },
+        { num: 12, clue: "Protein source from animals", row: 6, col: 14, answer: "CARNE" },
+        { num: 13, clue: "Lives in water, rich in omega-3", row: 7, col: 4, answer: "PESTE" },
+        { num: 15, clue: "To drink liquids", row: 8, col: 2, answer: "BEA" },
+        { num: 16, clue: "A group of edible plants", row: 8, col: 9, answer: "LEGUME" },
+        { num: 17, clue: "To cook in oil", row: 10, col: 12, answer: "PRAJI" },
+        { num: 18, clue: "To boil in hot water", row: 11, col: 4, answer: "FIERBE" },
+        { num: 20, clue: "To place an order", row: 13, col: 6, answer: "COMANDA" },
+        { num: 22, clue: "Sweet white crystals", row: 16, col: 6, answer: "ZAHAR" },
+        { num: 23, clue: "White grains, staple in Asia", row: 18, col: 5, answer: "OREZ" },
+      ],
+      down: [
+        { num: 1, clue: "Comes from a chicken, often boiled", row: 0, col: 17, answer: "OU" },
+        { num: 3, clue: "To cut with a knife", row: 1, col: 19, answer: "TAIA" },
+        { num: 4, clue: "Sweet, colorful, and healthy", row: 3, col: 14, answer: "FRUCT" },
+        { num: 5, clue: "White liquid from cows", row: 4, col: 7, answer: "LAPTE" },
+        { num: 6, clue: "Traditional Romanian bread", row: 4, col: 10, answer: "PAINE" },
+        { num: 8, clue: "To offer food or drink", row: 4, col: 16, answer: "SERVI" },
+        { num: 10, clue: "To prepare meals", row: 6, col: 0, answer: "GATI" },
+        { num: 11, clue: "The most essential drink", row: 6, col: 4, answer: "APA" },
+        { num: 14, clue: "To acquire items for money", row: 7, col: 12, answer: "CUMPARA" },
+        { num: 19, clue: "Made from fermented milk", row: 11, col: 5, answer: "IAURT" },
+        { num: 21, clue: "Used to season food", row: 15, col: 7, answer: "SARE" },
+      ]
+    };
+
+    const board = Array.from({ length: SIZE }, () => Array(SIZE).fill(null));
+
+    function renderClues(clueList, container) {
+      clueList.forEach(({ num, clue }) => {
+        const li = document.createElement("li");
+        li.textContent = `${num}. ${clue}`;
+        container.appendChild(li);
+      });
+    }
+
+    renderClues(clues.across, acrossClues);
+    renderClues(clues.down, downClues);
+
+    function markAnswer(answer, cells) {
+      cells.forEach(([r, c], i) => {
+        const input = inputMap[`${r},${c}`];
+        const parent = input.parentElement;
+        parent.classList.remove("correct", "incorrect");
+
+        const val = input.value.toUpperCase();
+        if (val === answer[i]) {
+          parent.classList.add("correct");
+        } else if (val) {
+          parent.classList.add("incorrect");
+        }
+      });
+    }
+
+    function buildGrid() {
+      clues.across.forEach(({ row, col, answer, num }) => {
+        const cells = [];
+        for (let i = 0; i < answer.length; i++) {
+          if (!board[row][col + i]) board[row][col + i] = {};
+          if (i === 0) board[row][col + i].num = num;
+          cells.push([row, col + i]);
+        }
+        words.push({ answer, cells });
+      });
+
+      clues.down.forEach(({ row, col, answer, num }) => {
+        const cells = [];
+        for (let i = 0; i < answer.length; i++) {
+          if (!board[row + i][col]) board[row + i][col] = {};
+          if (i === 0 && !board[row + i][col].num) board[row + i][col].num = num;
+          cells.push([row + i, col]);
+        }
+        words.push({ answer, cells });
+      });
+
+      for (let r = 0; r < SIZE; r++) {
+        for (let c = 0; c < SIZE; c++) {
+          const cell = board[r][c];
+          const div = document.createElement("div");
+
+          if (cell) {
+            div.className = "cell";
+            const input = document.createElement("input");
+            input.dataset.row = r;
+            input.dataset.col = c;
+            input.maxLength = 1;
+
+            input.addEventListener("input", () => {
+              input.value = input.value.toUpperCase();
+              div.classList.remove("correct", "incorrect");
+              const next = inputMap[`${r},${c + 1}`] || inputMap[`${r + 1},${c}`];
+              if (next && input.value) next.focus();
+            });
+
+            input.addEventListener("keydown", (e) => {
+              const keyMap = {
+                ArrowRight: [r, c + 1],
+                ArrowLeft: [r, c - 1],
+                ArrowDown: [r + 1, c],
+                ArrowUp: [r - 1, c],
+              };
+              if (keyMap[e.key]) {
+                const [nr, nc] = keyMap[e.key];
+                const next = inputMap[`${nr},${nc}`];
+                if (next) next.focus();
+              }
+            });
+
+            inputMap[`${r},${c}`] = input;
+            div.appendChild(input);
+
+            if (cell.num) {
+              const label = document.createElement("div");
+              label.className = "number";
+              label.textContent = cell.num;
+              div.appendChild(label);
+            }
+          } else {
+            div.className = "cell blocked";
+          }
+
+          gridEl.appendChild(div);
+        }
+      }
+    }
+
+    function checkAnswers() {
+      words.forEach(({ answer, cells }) => markAnswer(answer, cells));
+    }
+
+    function clearGrid() {
+      Object.values(inputMap).forEach(input => {
+        input.value = "";
+        input.parentElement.classList.remove("correct", "incorrect");
+      });
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
+      document.body.classList.toggle("light");
+    }
+
+    buildGrid();
+  </script>
+</body>
+</html>
