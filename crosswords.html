@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cheatsheets</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap');
+
+    body {
+      background: linear-gradient(135deg, #d0d0d0, #a0a0a0);
+      font-family: 'Comfortaa', cursive, Arial, sans-serif;
+      color: #333;
+      text-align: center;
+      padding: 50px 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+
+    /* Container for the top button to keep it left-aligned */
+    .top-button-container {
+      width: 100%;
+      text-align: left;
+      margin-bottom: 40px;
+    }
+
+    .button {
+      display: inline-block;
+      background-color: #f0f0f0;
+      color: #666;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 15px 30px;
+      margin: 10px 12px;
+      border-radius: 30px;
+      text-decoration: none;
+      box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1);
+      transition: 
+        background-color 0.3s ease,
+        color 0.3s ease,
+        transform 0.2s ease,
+        box-shadow 0.3s ease;
+      user-select: none;
+      cursor: pointer;
+    }
+
+    .button:hover,
+    .button:focus {
+      background-color: #888;
+      color: #fff;
+      box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+      transform: translateY(-3px) scale(1.05);
+      outline: none;
+    }
+
+    .button:active {
+      transform: translateY(-1px) scale(1);
+      box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      margin-bottom: 0.2em;
+      color: #444;
+      text-shadow: 1px 1px 3px #bbb;
+    }
+
+    p {
+      font-size: 1.3rem;
+      margin-bottom: 40px;
+      color: #555;
+      max-width: 450px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.5;
+      text-shadow: 1px 1px 2px #eee;
+    }
+
+    /* Responsive scaling for smaller screens */
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2.4rem;
+      }
+      p {
+        font-size: 1rem;
+      }
+      .button {
+        padding: 12px 24px;
+        font-size: 1rem;
+        margin: 8px 8px;
+      }
+      .top-button-container {
+        margin-bottom: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-button-container">
+    <a href="index.html" class="button" aria-label="Go back to homepage">← Go Back</a>
+  </div>
+
+  <h1>Cheatsheets</h1>
+  <p>Cheatsheets for a better understanding of the romanian language</p>
+
+  <a href="foods.html" class="button">Foods</a>
+
+</body>
+</html>
