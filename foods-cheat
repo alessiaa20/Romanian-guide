@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Let's Talk About Food</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      margin: 20px;
+      background-color: #888; /* Background set to #888 */
+      color: #eee; /* Light text for contrast */
+    }
+
+    .go-back-button {
+      display: inline-block;
+      margin-bottom: 20px;
+      padding: 8px 16px;
+      background-color: #444;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+    .go-back-button:hover {
+      background-color: #222;
+    }
+
+    h1, h2, h3 {
+      color: #ddd;
+      margin-bottom: 0.5em;
+    }
+
+    h1 {
+      border-bottom: 2px solid #bbb;
+      padding-bottom: 0.2em;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1em 0;
+      font-size: 0.95em;
+      background-color: #aaa; /* slightly lighter for tables */
+      color: #222;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    th, td {
+      border: 1px solid #888;
+      padding: 10px;
+      text-align: left;
+      background-color: #eee;
+      color: #333;
+    }
+
+    th {
+      background-color: #ccc;
+      color: #444;
+    }
+
+    tr:nth-child(even) td {
+      background-color: #ddd;
+    }
+
+    .section {
+      margin-bottom: 50px;
+    }
+
+    .example, .bonus {
+      background-color: #bbb;
+      padding: 12px 16px;
+      border-left: 5px solid #666;
+      margin-top: 10px;
+      color: #222;
+    }
+
+    .exercise {
+      background-color: #999;
+      border-left: 5px solid #666;
+      padding: 12px 16px;
+      margin-top: 10px;
+      color: #eee;
+    }
+
+    ul {
+      list-style-type: disc;
+      margin-left: 25px;
+      color: #ddd;
+    }
+
+    strong {
+      color: #eee;
+    }
+
+    p {
+      color: #ddd;
+    }
+
+    code {
+      background-color: #ccc;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-family: Consolas, monospace;
+      color: #222;
+    }
+  </style>
+</head>
+<body>
+  <a href="cheat.html" class="go-back-button">← Go Back</a>
+
+  <h1>Let's Talk About Food</h1>
+
+  <div class="section">
+    <h2>Noun Gender and Articles</h2>
+    <table>
+      <tr><th>Gender</th><th>Indefinite article</th><th>Definite Article (suffix)</th></tr>
+      <tr><td>Masculine</td><td>un pește (a fish)</td><td>peștele (the fish)</td></tr>
+      <tr><td>Feminine</td><td>o supă (a soup)</td><td>supa (the soup)</td></tr>
+     <tr><td>Neuter</td><td>un ou (an egg)</td><td>oul (the egg)</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Questions About Food / Întrebări despre mâncare</h2>
+    <table>
+      <tr><th>ENGLISH</th><th>ROMANIAN</th></tr>
+      <tr><td>What do you want to eat?</td><td>Ce vrei să mănânci?</td></tr>
+      <tr><td>Do you like cheese?</td><td>Îți place brânza?</td></tr>
+      <tr><td>What is your favorite food?</td><td>Care este mâncarea ta preferată?</td></tr>
+      <tr><td>Are you hungry?</td><td>Ți-e foame?</td></tr>
+      <tr><td>What are we eating today?</td><td>Ce mâncăm azi?</td></tr>
+      <tr><td>Do you want water or wine?</td><td>Vrei apă sau vin?</td></tr>
+      <tr><td>What did you eat today? What about yesterday?</td><td>Ce ai mâncat azi? Dar ieri?</td></tr>
+      <tr><td>What will you eat tomorrow?</td><td>Ce vei mânca mâine?</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+  <h2>Subject and Verb Conjugation / Subiect și Conjugarea Verbului (a mânca)</h2>
+  <table>
+    <tr><th>Subject</th><th>Verb (a mânca)</th></tr>
+    <tr><td>Eu (I)</td><td>mănânc (-c or others)</td></tr>
+    <tr><td>Tu (You)</td><td>mănânci (-i)</td></tr>
+    <tr><td>El/Ea (He/She)</td><td>mănâncă</td></tr>
+    <tr><td>Noi (We)</td><td>mâncăm (-ăm; -im)</td></tr>
+    <tr><td>Voi (You pl.)</td><td>mâncați (-ți)</td></tr>
+    <tr><td>Ei/Ele (They)</td><td>mănâncă</td></tr>
+  </table>
+</div>
+
+<div class="section">
+  <h2>Plural Forms (Basics)</h2>
+  <p>Plural endings vary by gender and word ending.</p>
+  <table>
+    <tr><th>Singular</th><th>Plural</th><th>Meaning</th></tr>
+    <tr><td>măr</td><td>mere</td><td>apple → apples</td></tr>
+    <tr><td>ou</td><td>ouă</td><td>egg → eggs</td></tr>
+    <tr><td>legumă</td><td>legume</td><td>vegetable → vegetables</td></tr>
+    <tr><td>supă</td><td>supe</td><td>soup → soups</td></tr>
+  </table>
+</div>
+
+<div class="section">
+  <h2>Pronunciation Tips</h2>
+  <ul>
+    <li>ă sounds like "uh" (as in sofa)</li>
+    <li>â / î = deep "i" sound from the throat</li>
+    <li>ș = "sh"</li>
+    <li>ț = "ts"</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2>Common Prepositions</h2>
+  <table>
+    <tr><th>Romanian</th><th>Meaning</th><th>Example</th></tr>
+    <tr><td>cu</td><td>with</td><td>supă cu legume (soup with vegetables)</td></tr>
+    <tr><td>fără</td><td>without</td><td>cafea fără zahăr (coffee without sugar)</td></tr>
+    <tr><td>de</td><td>of</td><td>suc de mere (apple juice)</td></tr>
+    <tr><td>pentru</td><td>for</td><td>mâncare pentru copii (food for children)</td></tr>
+  </table>
+</div>
+
+  <div class="section">
+    <h2>Future Tense Verbs / Verbe la viitor</h2>
+    <p>Use the structure: <strong>"voi/vei/va/vom/veti/vor" + verb (infinitive form)</strong></p>
+    <table>
+      <tr>
+        <th>Pronoun</th><th>to eat (a mânca)</th><th>to drink (a bea)</th><th>to cook (a găti)</th>
+        <th>to buy (a cumpăra)</th><th>to try (a încerca)</th><th>to order (a comanda)</th>
+      </tr>
+      <tr><td>Eu (I)</td><td>voi mânca</td><td>voi bea</td><td>voi găti</td><td>voi cumpăra</td><td>voi încerca</td><td>voi comanda</td></tr>
+      <tr><td>Tu (you - sg.)</td><td>vei mânca</td><td>vei bea</td><td>vei găti</td><td>vei cumpăra</td><td>vei încerca</td><td>vei comanda</td></tr>
+      <tr><td>El/Ea (he/she)</td><td>va mânca</td><td>va bea</td><td>va găti</td><td>va cumpăra</td><td>va încerca</td><td>va comanda</td></tr>
+      <tr><td>Noi (we)</td><td>vom mânca</td><td>vom bea</td><td>vom găti</td><td>vom cumpăra</td><td>vom încerca</td><td>vom comanda</td></tr>
+      <tr><td>Voi (you - pl.)</td><td>veți mânca</td><td>veți bea</td><td>veți găti</td><td>veți cumpăra</td><td>veți încerca</td><td>veți comanda</td></tr>
+      <tr><td>Ei/Ele (they)</td><td>vor mânca</td><td>vor bea</td><td>vor găti</td><td>vor cumpăra</td><td>vor încerca</td><td>vor comanda</td></tr>
+    </table>
+
+    <div class="example">
+      <strong>Example Sentences:</strong><br/>
+      • Eu voi mânca o salată. (I will eat a salad.)<br/>
+      • Noi vom bea apă. (We will drink water.)<br/>
+      • Ei vor comanda supă. (They will order soup.)
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Cheatsheets</h2>
+    <h3>A. Pronunciation Tips</h3>
+    <ul>
+      <li>"ce" = "che" as in "cheese" (e.g., "Ce vrei?" = "Che vrei?")</li>
+      <li>"ci" = "chi" as in "chill"</li>
+      <li>Romanian vowels are short and clear</li>
+    </ul>
+
+    <h3>B. Food Cheat Vocabulary</h3>
+    <ul>
+      <li>Breakfast = Mic dejun</li>
+      <li>Lunch = Prânz</li>
+      <li>Dinner = Cină</li>
+      <li>Dessert = Desert</li>
+    </ul>
+
+    <h3>C. Future Tense Quick Guide</h3>
+    <table>
+      <tr><th>Pronoun</th><th>Will (do)</th></tr>
+      <tr><td>Eu</td><td>Voi</td></tr>
+      <tr><td>Tu</td><td>Vei</td></tr>
+      <tr><td>El/Ea</td><td>Va</td></tr>
+      <tr><td>Noi</td><td>Vom</td></tr>
+      <tr><td>Voi</td><td>Veți</td></tr>
+      <tr><td>Ei/Ele</td><td>Vor</td></tr>
+    </table>
+
+    <div class="example">
+      Example: Vom găti cina. (We will cook dinner.)
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Easy Sentence-Building Tips / Cum să formezi propoziții</h2>
+    <ul>
+      <li><strong>Tip 1:</strong> Subject + Verb + Object<br/>Ex: Eu voi mânca pâine.</li>
+      <li><strong>Tip 2:</strong> Start with a template<br/>Ex: "I will [verb] [food]."</li>
+      <li><strong>Tip 3:</strong> Use words you know and build sentences with vocabulary.</li>
+      <li><strong>Tip 4:</strong> Learn sentence starters like:<br/>Ce...? Vrei...? Îmi place... Vom merge...</li>
+    </ul>
+
+    <div class="example">
+      Examples:<br/>
+      Tu vei bea vin. (You will drink wine.)<br/>
+      Noi vom mânca supă. (We will eat soup.)<br/>
+      El va găti pui. (He will cook chicken.)
+    </div>
+  </div>
+</body>
+</html>
