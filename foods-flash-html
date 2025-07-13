@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Flashcards</title>
+  <style>
+    :root {
+      --main-color: #888;
+      --card-bg: #fff;
+      --bg-color: #f4f4f4;
+      --btn-bg: #888;
+      --btn-hover: #666;
+      --text-color: #333;
+      --highlight: #e0e0e0;
+    }
+
+    body.dark {
+      --main-color: #ccc;
+      --card-bg: #222;
+      --bg-color: #121212;
+      --btn-bg: #444;
+      --btn-hover: #666;
+      --text-color: #eee;
+      --highlight: #333;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      position: relative;
+    }
+
+    a.back-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: var(--btn-bg);
+      color: white;
+      text-decoration: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
+      z-index: 20;
+    }
+    a.back-button:hover {
+      background-color: var(--btn-hover);
+    }
+
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 0 20px;
+    }
+
+    .card-container {
+      perspective: 1200px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .card {
+      width: 450px;
+      max-width: 90vw;
+      height: 280px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s ease;
+      cursor: pointer;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      background: var(--card-bg);
+      color: var(--main-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      text-align: center;
+      padding: 30px;
+      user-select: none;
+    }
+
+    .card.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 16px;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      box-sizing: border-box;
+    }
+
+    .card-front {
+      background: var(--card-bg);
+      color: var(--main-color);
+    }
+
+    .card-back {
+      background: var(--card-bg);
+      color: var(--main-color);
+      transform: rotateY(180deg);
+    }
+
+    .controls {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+
+    button {
+      padding: 12px 24px;
+      background-color: var(--btn-bg);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+
+    button:hover {
+      background-color: var(--btn-hover);
+    }
+
+    #dark-toggle {
+      font-size: 1.4rem;
+      padding: 12px 16px;
+    }
+
+    /* Slide-in panel for word list */
+    #word-list-container {
+      width: 300px;
+      background: var(--card-bg);
+      border-left: 1px solid var(--highlight);
+      padding: 20px 25px;
+      position: fixed;
+      top: 0;
+      right: -320px;
+      height: 100%;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+      overflow-y: auto;
+      transition: right 0.4s ease;
+      z-index: 15;
+      color: var(--main-color);
+      display: flex;
+      flex-direction: column;
+    }
+
+    #word-list-container.show {
+      right: 0;
+    }
+
+    #word-list-container h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    #word-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+      flex-grow: 1;
+      overflow-y: auto;
+    }
+
+    #word-list li {
+      padding: 10px;
+      border-bottom: 1px solid var(--highlight);
+      font-size: 1.1rem;
+      color: var(--main-color);
+    }
+
+    #word-list li:last-child {
+      border-bottom: none;
+    }
+
+    #hide-list {
+      background-color: var(--btn-bg);
+      color: white;
+      padding: 8px 14px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-bottom: 15px;
+      align-self: center;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+
+    #hide-list:hover {
+      background-color: var(--btn-hover);
+    }
+
+    /* Progress tracker */
+    #progress {
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--main-color);
+      user-select: none;
+    }
+
+    /* Custom modal styles */
+    #password-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    #password-modal.show {
+      display: flex;
+    }
+
+    #password-modal .modal-content {
+      background: var(--card-bg);
+      color: var(--main-color);
+      border-radius: 12px;
+      padding: 25px 30px;
+      width: 320px;
+      max-width: 90vw;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    #password-modal label {
+      font-weight: 600;
+      font-size: 1.1rem;
+      user-select: none;
+    }
+
+    #password-modal input[type="text"] {
+      padding: 10px 14px;
+      font-size: 1rem;
+      border: 1px solid var(--highlight);
+      border-radius: 6px;
+      background: var(--bg-color);
+      color: var(--text-color);
+    }
+
+    #password-modal input[type="text"]:focus {
+      outline: none;
+      border-color: var(--btn-bg);
+    }
+
+    #password-modal .hint {
+      font-size: 0.9rem;
+      font-style: italic;
+      color: var(--btn-bg);
+      user-select: none;
+      text-align: center;
+    }
+
+    #password-modal .buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    #password-modal button {
+      min-width: 70px;
+      padding: 8px 12px;
+      font-weight: 600;
+      border-radius: 6px;
+      user-select: none;
+    }
+
+    #password-modal button.confirm {
+      background-color: var(--btn-bg);
+      color: white;
+    }
+    #password-modal button.confirm:hover {
+      background-color: var(--btn-hover);
+    }
+
+    #password-modal button.cancel {
+      background-color: #bbb;
+      color: #222;
+    }
+    #password-modal button.cancel:hover {
+      background-color: #999;
+      color: #111;
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        height: 220px;
+        font-size: 1.4rem;
+      }
+
+      #word-list-container {
+        width: 100%;
+        right: -100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="index.html" class="back-button">← Go Back</a>
+
+  <div class="main-content">
+    <div id="progress">Card 1 / 26</div>
+
+    <div class="card-container">
+      <div id="flashcard" class="card" tabindex="0" role="button" aria-pressed="false" aria-label="Flashcard. Click to flip.">
+        <div class="card-face card-front" id="card-front">Click to Reveal</div>
+        <div class="card-face card-back" id="card-back"></div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button onclick="prevCard()" aria-label="Previous card">Previous</button>
+      <button onclick="nextCard()" aria-label="Next card">Next</button>
+      <button onclick="shuffleCards()" aria-label="Shuffle cards">Shuffle</button>
+      <button onclick="openPasswordModal()" aria-label="Show answers">Show Answers</button>
+      <button id="dark-toggle" aria-label="Toggle dark mode">🌙</button>
+    </div>
+  </div>
+
+  <div id="word-list-container" aria-live="polite" aria-hidden="true">
+    <button id="hide-list" onclick="hideList()" aria-label="Hide answer list">Hide</button>
+    <h3>Flashcard Answers</h3>
+    <ul id="word-list"></ul>
+  </div>
+
+  <!-- Custom Password Modal -->
+  <div id="password-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-desc">
+    <div class="modal-content">
+      <h2 id="modal-title" style="margin:0; font-weight:700; font-size:1.3rem; text-align:center;">Enter Password</h2>
+      <p id="modal-desc" class="hint">The password is the name of the lesson but in Romanian</p>
+      <label for="password-input">Password:</label>
+      <input type="text" id="password-input" autocomplete="off" />
+      <div class="buttons">
+        <button class="cancel" onclick="closePasswordModal()" aria-label="Cancel password entry">Cancel</button>
+        <button class="confirm" onclick="checkPassword()" aria-label="Submit password">Submit</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const flashcards = [
+    { question: "bread", answer: "pâine" },
+    { question: "water", answer: "apă" },
+    { question: "milk", answer: "lapte" },
+    { question: "apple", answer: "măr" },
+    { question: "egg", answer: "ou" },
+    { question: "fish", answer: "pește" },
+    { question: "meat", answer: "carne" },
+    { question: "vegetables", answer: "legume" },
+    { question: "fruits", answer: "fructe" },
+    { question: "cheese", answer: "brânză" },
+    { question: "soup", answer: "supă" },
+    { question: "rice", answer: "orez" },
+    { question: "sugar", answer: "zahăr" },
+    { question: "salt", answer: "sare" },
+    { question: "to eat", answer: "a mânca" },
+    { question: "to drink", answer: "a bea" },
+    { question: "to cook", answer: "a găti" },
+    { question: "to buy", answer: "a cumpăra" },
+    { question: "to serve", answer: "a servi" },
+    { question: "to cut", answer: "a tăia" },
+    { question: "to boil", answer: "a fierbe" },
+    { question: "to fry", answer: "a prăji" },
+    { question: "to taste", answer: "a gusta" },
+    { question: "to order", answer: "a comanda" },
+    { question: "butter", answer: "unt" },
+    { question: "yogurt", answer: "iaurt" }
+  ];
+
+  let currentIndex = 0;
+  let showingAnswer = false;
+
+  const flashcard = document.getElementById("flashcard");
+  const cardFront = document.getElementById("card-front");
+  const cardBack = document.getElementById("card-back");
+  const progress = document.getElementById("progress");
+  const wordListContainer = document.getElementById("word-list-container");
+  const wordList = document.getElementById("word-list");
+  const darkToggle = document.getElementById("dark-toggle");
+
+  // Password modal elements
+  const passwordModal = document.getElementById("password-modal");
+  const passwordInput = document.getElementById("password-input");
+
+  // Initialize card content & progress
+  function updateCardContent() {
+    const current = flashcards[currentIndex];
+    cardFront.textContent = current.question;
+    cardBack.textContent = current.answer;
+    progress.textContent = `Card ${currentIndex + 1} / ${flashcards.length}`;
+  }
+
+  // Flip card back to front, then update to new card
+  function flipToQuestionThenUpdate(newIndex) {
+    if (showingAnswer) {
+      flashcard.classList.remove("flipped");
+      flashcard.setAttribute("aria-pressed", "false");
+      showingAnswer = false;
+      setTimeout(() => {
+        currentIndex = newIndex;
+        updateCardContent();
+      }, 600);
+    } else {
+      currentIndex = newIndex;
+      updateCardContent();
+    }
+  }
+
+  // Event: Flip card on click
+  flashcard.addEventListener("click", () => {
+    showingAnswer = !showingAnswer;
+    flashcard.classList.toggle("flipped");
+    flashcard.setAttribute("aria-pressed", showingAnswer.toString());
+  });
+
+  // Keyboard accessibility for flip (Enter or Space)
+  flashcard.addEventListener("keydown", e => {
+    if(e.key === "Enter" || e.key === " "){
+      e.preventDefault();
+      flashcard.click();
+    }
+  });
+
+  function nextCard() {
+    const next = (currentIndex + 1) % flashcards.length;
+    flipToQuestionThenUpdate(next);
+  }
+
+  function prevCard() {
+    const prev = (currentIndex - 1 + flashcards.length) % flashcards.length;
+    flipToQuestionThenUpdate(prev);
+  }
+
+  // Shuffle array helper
+  function shuffleArray(array) {
+    for(let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
+  function shuffleCards() {
+    shuffleArray(flashcards);
+    currentIndex = 0;
+    showingAnswer = false;
+    flashcard.classList.remove("flipped");
+    flashcard.setAttribute("aria-pressed", "false");
+    updateCardContent();
+  }
+
+  // Open custom password modal
+  function openPasswordModal() {
+    passwordInput.value = "";
+    passwordModal.classList.add("show");
+    wordListContainer.setAttribute("aria-hidden", "true");
+    passwordInput.focus();
+  }
+
+  // Close password modal
+  function closePasswordModal() {
+    passwordModal.classList.remove("show");
+  }
+
+  // Check password entered by user
+  function checkPassword() {
+    const input = passwordInput.value.trim().toLowerCase();
+    const correctPassword = "mancare"; // lesson name in Romanian
+
+    if(input === correctPassword) {
+      showAnswers();
+      closePasswordModal();
+    } else {
+      alert("Incorrect password!");
+      passwordInput.focus();
+    }
+  }
+
+  // Show answers panel
+  function showAnswers() {
+    // Clear list first
+    wordList.innerHTML = "";
+    flashcards.forEach(card => {
+      const li = document.createElement("li");
+      li.textContent = `${card.question} - ${card.answer}`;
+      wordList.appendChild(li);
+    });
+    wordListContainer.classList.add("show");
+    wordListContainer.setAttribute("aria-hidden", "false");
+  }
+
+  // Hide answers panel
+  function hideList() {
+    wordListContainer.classList.remove("show");
+    wordListContainer.setAttribute("aria-hidden", "true");
+  }
+
+  // Dark mode toggle logic
+  function toggleDarkMode() {
+    document.body.classList.toggle("dark");
+    if(document.body.classList.contains("dark")) {
+      darkToggle.textContent = "☀️";
+      localStorage.setItem("darkMode", "true");
+    } else {
+      darkToggle.textContent = "🌙";
+      localStorage.setItem("darkMode", "false");
+    }
+  }
+
+  darkToggle.addEventListener("click", toggleDarkMode);
+
+  // Load dark mode preference
+  window.addEventListener("DOMContentLoaded", () => {
+    updateCardContent();
+
+    if(localStorage.getItem("darkMode") === "true") {
+      document.body.classList.add("dark");
+      darkToggle.textContent = "☀️";
+    }
+
+    // Accessibility: close modal on ESC
+    document.addEventListener("keydown", e => {
+      if(e.key === "Escape" && passwordModal.classList.contains("show")){
+        closePasswordModal();
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
