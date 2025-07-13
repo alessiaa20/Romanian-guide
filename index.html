@@ -1,99 +1,248 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Crosswords and cheatsheets</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap');
 
+    /* Reset */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
     body {
-      background: linear-gradient(135deg, #d0d0d0, #a0a0a0);
-      font-family: 'Comfortaa', cursive, Arial, sans-serif;
-      color: #333;
-      text-align: center;
-      padding: 50px 20px;
+      margin: 0;
       min-height: 100vh;
+      font-family: 'Comfortaa', cursive, Arial, sans-serif;
+      background:
+        linear-gradient(135deg, #cfcfcf, #9b9b9b);
       display: flex;
       flex-direction: column;
       justify-content: center;
-      box-sizing: border-box;
+      align-items: center;
+      padding: 30px 20px 80px; /* add bottom padding for footer space */
+      color: #444;
+      overflow-x: hidden;
+      gap: 40px;
+      position: relative;
+    }
+
+    /* Background layered shadows */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -30%;
+      left: -20%;
+      width: 150vw;
+      height: 150vh;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(136,136,136,0.15), transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(136,136,136,0.10), transparent 30%);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+      animation: slowrotate 60s linear infinite;
+    }
+    @keyframes slowrotate {
+      from { transform: rotate(0deg);}
+      to { transform: rotate(360deg);}
+    }
+
+    /* Container card with neumorphic style */
+    .card {
+      position: relative;
+      background: #e0e0e0;
+      border-radius: 28px;
+      padding: 48px 40px 56px;
+      width: 420px;
+      box-shadow:
+        8px 8px 20px #a0a0a0,
+        -8px -8px 20px #ffffff;
+      text-align: center;
+      z-index: 1;
+      animation: fadeInScale 0.8s ease forwards;
+      transform-origin: center bottom;
+    }
+
+    @keyframes fadeInScale {
+      0% {
+        opacity: 0;
+        transform: scale(0.85);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
 
     h1 {
-      font-size: 3.5rem;
-      margin-bottom: 0.2em;
-      color: #444;
-      text-shadow: 1px 1px 3px #bbb;
+      margin: 0 0 16px;
+      font-size: 3rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: #555;
+      text-shadow:
+        1px 1px 1px #cfcfcf,
+        -1px -1px 1px #ffffff;
     }
 
     p {
-      font-size: 1.3rem;
-      margin-bottom: 40px;
-      color: #555;
-      max-width: 450px;
-      margin-left: auto;
-      margin-right: auto;
-      line-height: 1.5;
-      text-shadow: 1px 1px 2px #eee;
+      margin: 0 0 40px;
+      font-size: 1.25rem;
+      color: #666;
+      line-height: 1.55;
+      text-shadow: 1px 1px 0 #f0f0f0;
     }
 
+    /* Buttons container */
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    /* Neumorphic button style */
     .button {
-      display: inline-block;
-      background-color: #f0f0f0;
-      color: #666;
+      flex: 1 1 140px;
+      max-width: 180px;
+      background: #d8d8d8;
+      border-radius: 32px;
       font-weight: 700;
       font-size: 1.1rem;
-      padding: 15px 30px;
-      margin: 10px 12px;
-      border-radius: 30px;
-      text-decoration: none;
-      box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1);
-      transition: 
-        background-color 0.3s ease,
-        color 0.3s ease,
-        transform 0.2s ease,
-        box-shadow 0.3s ease;
-      user-select: none;
+      color: #666;
+      padding: 14px 36px;
+      box-shadow:
+        6px 6px 12px #b1b1b1,
+        -6px -6px 12px #ffffff;
       cursor: pointer;
+      text-decoration: none;
+      user-select: none;
+      transition:
+        box-shadow 0.3s ease,
+        color 0.3s ease,
+        transform 0.2s ease;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
     }
 
+    /* Pressed effect on hover */
     .button:hover,
     .button:focus {
-      background-color: #888;
-      color: #fff;
-      box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-      transform: translateY(-3px) scale(1.05);
+      color: #888;
+      box-shadow:
+        inset 6px 6px 10px #b1b1b1,
+        inset -6px -6px 10px #ffffff;
+      transform: translateY(-3px);
       outline: none;
     }
 
     .button:active {
-      transform: translateY(-1px) scale(1);
-      box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.15);
+      box-shadow:
+        inset 4px 4px 8px #b1b1b1,
+        inset -4px -4px 8px #ffffff;
+      transform: translateY(-1px);
     }
 
-    /* Responsive scaling for smaller screens */
+    /* Subtle highlight animation on hover */
+    .button::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -75%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        120deg,
+        rgba(255 255 255 / 0.15) 0%,
+        rgba(255 255 255 / 0) 60%
+      );
+      transform: rotate(25deg);
+      transition: all 0.7s ease;
+      pointer-events: none;
+    }
+
+    .button:hover::before {
+      left: 110%;
+      transition: all 0.7s ease;
+    }
+
+    /* Footer line container */
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 420px;
+      max-width: 90vw;
+      text-align: center;
+      font-family: 'Comfortaa', cursive, Arial, sans-serif;
+      color: #888;
+      font-size: 0.9rem;
+      user-select: none;
+      padding: 10px 0 4px;
+      z-index: 10;
+      background: transparent;
+    }
+
+    /* Thin line */
+    footer::after {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 1.8px;
+      background: #888;
+      margin-top: 6px;
+      border-radius: 1px;
+      opacity: 0.7;
+    }
+
+    /* Responsive */
     @media (max-width: 480px) {
+      .card {
+        width: 100%;
+        padding: 36px 24px 56px;
+      }
       h1 {
         font-size: 2.4rem;
       }
       p {
         font-size: 1rem;
+        margin-bottom: 32px;
+      }
+      .buttons {
+        gap: 16px;
       }
       .button {
-        padding: 12px 24px;
+        flex: 1 1 100%;
+        max-width: 100%;
+        padding: 14px 0;
         font-size: 1rem;
-        margin: 8px 8px;
+      }
+      footer {
+        width: 90vw;
+        font-size: 0.8rem;
+        padding: 8px 0 4px;
       }
     }
   </style>
 </head>
 <body>
-  <h1>Crosswords and cheatsheets</h1>
-  <p>Special crosswords for learning romanian</p>
+  <div class="card" role="main">
+    <h1>Crosswords and cheatsheets</h1>
+    <p>Exercises for learning romanian</p>
+    <div class="buttons">
+      <a href="crosswords.html" class="button" role="button" tabindex="0">Crosswords</a>
+      <a href="cheat.html" class="button" role="button" tabindex="0">Cheatsheets</a>
+    </div>
+  </div>
 
-  <a href="crosswords.html" class="button">Crosswords</a>
-  <a href="cheat.html" class="button"> Cheatsheets</a>
-
+  <footer>
+    <p>© 2025 Crosswords and Cheatsheets. All rights reserved. Made by Alessia.</p>
+  </footer>
 </body>
 </html>
