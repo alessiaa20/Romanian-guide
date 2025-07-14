@@ -5,38 +5,65 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>The verb to be</title>
   <style>
+    :root {
+      --bg-light: #f5f5f5;
+      --text-light: #222;
+      --bg-dark: #121212;
+      --text-dark: #f0f0f0;
+      --accent: #444;
+      --highlight: #666;
+      --border-light: #ccc;
+      --border-dark: #444;
+    }
+
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #888;
-      color: #eee;
-      margin: 20px;
-      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    body.light-mode {
+      background-color: var(--bg-light);
+      color: var(--text-light);
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+      padding: 20px;
     }
 
     a.go-back-button {
       display: inline-block;
       margin-bottom: 20px;
-      padding: 8px 16px;
-      background-color: #444;
+      padding: 10px 18px;
+      background-color: var(--accent);
       color: white;
       text-decoration: none;
-      border-radius: 4px;
+      border-radius: 8px;
       font-weight: bold;
       transition: background-color 0.3s ease;
     }
 
     a.go-back-button:hover {
-      background-color: #222;
-    }
-
-    h1, h2, h3 {
-      color: #ddd;
-      margin-bottom: 0.5em;
+      background-color: var(--highlight);
     }
 
     h1 {
-      border-bottom: 2px solid #bbb;
-      padding-bottom: 0.2em;
+      border-bottom: 2px solid var(--border-light);
+      padding-bottom: 0.3em;
+      margin-bottom: 1em;
+    }
+
+    h2, h3 {
+      margin-top: 2em;
     }
 
     table {
@@ -44,152 +71,191 @@
       border-collapse: collapse;
       margin: 1em 0;
       font-size: 0.95em;
-      background-color: #aaa;
-      color: #222;
-      border-radius: 6px;
-      overflow: hidden;
+      border: 1px solid var(--border-dark);
+    }
+
+    table, th, td {
+      border: 1px solid var(--border-dark);
+    }
+
+    body.light-mode table,
+    body.light-mode th,
+    body.light-mode td {
+      border-color: var(--border-light);
     }
 
     th, td {
-      border: 1px solid #888;
-      padding: 10px;
-      text-align: left;
-      background-color: #eee;
-      color: #333;
+      padding: 12px;
+      background-color: #222;
+      color: #eee;
     }
 
     th {
-      background-color: #ccc;
-      color: #444;
+      background-color: #333;
     }
 
     tr:nth-child(even) td {
-      background-color: #ddd;
+      background-color: #2a2a2a;
+    }
+
+    body.light-mode th,
+    body.light-mode td {
+      background-color: #fff;
+      color: #222;
+    }
+
+    body.light-mode tr:nth-child(even) td {
+      background-color: #f0f0f0;
+    }
+
+    ul {
+      text-align: left;
+      margin-left: 40px;
+    }
+
+    .tip, .example, .homework, .exercise {
+      margin-top: 10px;
+      padding: 14px 18px;
+      border-left: 5px solid var(--highlight);
+      background-color: #333;
+      color: #eee;
+      text-align: left;
+      border-radius: 4px;
+    }
+
+    body.light-mode .tip,
+    body.light-mode .example,
+    body.light-mode .homework,
+    body.light-mode .exercise {
+      background-color: #eee;
+      color: #222;
+    }
+
+    .toggle-btn {
+      padding: 10px 20px;
+      margin-bottom: 30px;
+      font-size: 1em;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #666, #444);
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .toggle-btn:hover {
+      background: linear-gradient(135deg, #777, #555);
+      transform: scale(1.05);
+    }
+
+    strong {
+      color: inherit;
+    }
+
+    p {
+      text-align: left;
     }
 
     .section {
       margin-bottom: 50px;
     }
-
-    .tip, .example, .homework {
-      background-color: #bbb;
-      padding: 12px 16px;
-      border-left: 5px solid #666;
-      margin-top: 10px;
-      color: #222;
-    }
-
-    .exercise {
-      background-color: #999;
-      border-left: 5px solid #666;
-      padding: 12px 16px;
-      margin-top: 10px;
-      color: #eee;
-    }
-
-    ul {
-      list-style-type: disc;
-      margin-left: 25px;
-      color: #ddd;
-    }
-
-    strong {
-      color: #eee;
-    }
-
-    p {
-      color: #ddd;
-    }
   </style>
 </head>
 <body>
+  <div class="container">
+    <a href="cheat.html" class="go-back-button">← Go Back</a>
+    <button class="toggle-btn" onclick="toggleDarkMode()">It's black / It's white</button>
 
-  <a href="cheat.html" class="go-back-button">← Go Back</a>
+    <h1>The verb to be</h1>
 
-  <h1>The verb to be</h1>
+    <div class="section">
+      <h2>1. Gender Identification by Noun Ending</h2>
+      <table>
+        <tr><th>Ending</th><th>Likely Gender</th><th>Examples</th></tr>
+        <tr><td>-ă</td><td>Feminine</td><td>fată, casă</td></tr>
+        <tr><td>-e</td><td>Feminine (often)</td><td>floare, femeie</td></tr>
+        <tr><td>-ie</td><td>Feminine</td><td>familie, bucurie</td></tr>
+        <tr><td>consonant</td><td>Masculine or Neuter</td><td>băiat, copil</td></tr>
+        <tr><td>-l</td><td>Usually Masculine</td><td>copil, păianjen</td></tr>
+        <tr><td>-u / -n / -t</td><td>Often Neuter</td><td>oraș, scaun, hotel</td></tr>
+      </table>
+    </div>
 
-  <div class="section">
-    <h2>1. Gender Identification by Noun Ending</h2>
-    <table>
-      <tr><th>Ending</th><th>Likely Gender</th><th>Examples</th></tr>
-      <tr><td>-ă</td><td>Feminine</td><td>fată, casă</td></tr>
-      <tr><td>-e</td><td>Feminine (often)</td><td>floare, femeie</td></tr>
-      <tr><td>-ie</td><td>Feminine</td><td>familie, bucurie</td></tr>
-      <tr><td>consonant</td><td>Masculine or Neuter</td><td>băiat, copil</td></tr>
-      <tr><td>-l</td><td>Usually Masculine</td><td>copil, păianjen</td></tr>
-      <tr><td>-u / -n / -t</td><td>Often Neuter</td><td>oraș, scaun, hotel</td></tr>
-    </table>
-  </div>
+    <div class="section">
+      <h2>2. Indefinite Article Trick</h2>
+      <ul>
+        <li><strong>o</strong> → feminine → o fată, o carte, o floare</li>
+        <li><strong>un</strong> → masculine or neuter → un copil, un băiat, un oraș</li>
+      </ul>
+      <div class="tip">
+        Neuter nouns act like masculine in singular and feminine in plural.
+      </div>
+    </div>
 
-  <div class="section">
-    <h2>2. Indefinite Article Trick</h2>
-    <ul>
-      <li><strong>o</strong> → feminine → o fată, o carte, o floare</li>
-      <li><strong>un</strong> → masculine or neuter → un copil, un băiat, un oraș</li>
-    </ul>
-    <div class="tip">
-      Neuter nouns act like masculine in singular and feminine in plural.
+    <div class="section">
+      <h2>3. Plural and Adjective Clues</h2>
+      <ul>
+        <li>Feminine plural → -e or -i → fată → fete, floare → flori</li>
+        <li>Masculine plural → -i or -eți → băiat → băieți, copil → copii</li>
+        <li>Neuter plural → -e or -uri → hotel → hoteluri</li>
+      </ul>
+      <div class="tip">
+        ✅ <strong>Quick tip:</strong><br/>
+        "toată" before a noun → feminine<br/>
+        "toți" before a noun → masculine
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>4. Practice Table</h2>
+      <table>
+        <tr><th>Word</th><th>Guess Gender</th><th>Check</th></tr>
+        <tr><td>carte</td><td>Feminine</td><td>o carte, cărți</td></tr>
+        <tr><td>copil</td><td>Masculine</td><td>un copil, copii</td></tr>
+        <tr><td>floare</td><td>Feminine</td><td>o floare, flori</td></tr>
+        <tr><td>oraș</td><td>Neuter</td><td>un oraș, orașe</td></tr>
+        <tr><td>băiat</td><td>Masculine</td><td>un băiat, băieți</td></tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>5. Articles</h2>
+      <h3>Indefinite Articles</h3>
+      <table>
+        <tr><th>Gender</th><th>Singular</th><th>Plural</th></tr>
+        <tr><td>Masculine</td><td>un</td><td>niște / doi</td></tr>
+        <tr><td>Feminine</td><td>o</td><td>două / niște</td></tr>
+        <tr><td>Neuter</td><td>un</td><td>două / niște</td></tr>
+      </table>
+
+      <h3>Definite Articles (Postfixed)</h3>
+      <table>
+        <tr><th>Gender</th><th>Singular</th><th>Plural</th><th>Example</th></tr>
+        <tr><td>Masculine</td><td>-ul</td><td>-ii</td><td>copil → copilul, copii → copiii</td></tr>
+        <tr><td>Feminine</td><td>-a</td><td>-le</td><td>fată → fata, fete → fetele</td></tr>
+        <tr><td>Neuter</td><td>-ul</td><td>-le</td><td>oraș → orașul, orașe → orașele</td></tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>6. Patterns by Ending</h2>
+      <table>
+        <tr><th>Ending</th><th>Gender</th><th>Plural Rule</th><th>Example</th></tr>
+        <tr><td>-ă</td><td>Feminine</td><td>→ -e</td><td>casă → case</td></tr>
+        <tr><td>-e</td><td>Feminine</td><td>→ -i</td><td>floare → flori</td></tr>
+        <tr><td>-ie</td><td>Feminine</td><td>→ -ii</td><td>familie → familii</td></tr>
+        <tr><td>consonant</td><td>Masculine/Neuter</td><td>→ -i / -e / -uri</td><td>scaun → scaune</td></tr>
+        <tr><td>-l</td><td>Masculine</td><td>→ -i</td><td>copil → copii</td></tr>
+      </table>
     </div>
   </div>
 
-  <div class="section">
-    <h2>3. Plural and Adjective Clues</h2>
-    <ul>
-      <li>Feminine plural → -e or -i → fată → fete, floare → flori</li>
-      <li>Masculine plural → -i or -eți → băiat → băieți, copil → copii</li>
-      <li>Neuter plural → -e or -uri → hotel → hoteluri</li>
-    </ul>
-    <div class="tip">
-      ✅ <strong>Quick tip:</strong><br/>
-      "toată" before a noun → feminine<br/>
-      "toți" before a noun → masculine
-    </div>
-  </div>
-
-  <div class="section">
-    <h2>4. Practice Table</h2>
-    <table>
-      <tr><th>Word</th><th>Guess Gender</th><th>Check</th></tr>
-      <tr><td>carte</td><td>Feminine</td><td>o carte, cărți</td></tr>
-      <tr><td>copil</td><td>Masculine</td><td>un copil, copii</td></tr>
-      <tr><td>floare</td><td>Feminine</td><td>o floare, flori</td></tr>
-      <tr><td>oraș</td><td>Neuter</td><td>un oraș, orașe</td></tr>
-      <tr><td>băiat</td><td>Masculine</td><td>un băiat, băieți</td></tr>
-    </table>
-  </div>
-
-  <div class="section">
-    <h2>5. Articles</h2>
-    <h3>Indefinite Articles</h3>
-    <table>
-      <tr><th>Gender</th><th>Singular</th><th>Plural</th></tr>
-      <tr><td>Masculine</td><td>un</td><td>niște / doi</td></tr>
-      <tr><td>Feminine</td><td>o</td><td>două / niște</td></tr>
-      <tr><td>Neuter</td><td>un</td><td>două / niște</td></tr>
-    </table>
-
-    <h3>Definite Articles (Postfixed)</h3>
-    <table>
-      <tr><th>Gender</th><th>Singular</th><th>Plural</th><th>Example</th></tr>
-      <tr><td>Masculine</td><td>-ul</td><td>-ii</td><td>copil → copilul, copii → copiii</td></tr>
-      <tr><td>Feminine</td><td>-a</td><td>-le</td><td>fată → fata, fete → fetele</td></tr>
-      <tr><td>Neuter</td><td>-ul</td><td>-le</td><td>oraș → orașul, orașe → orașele</td></tr>
-    </table>
-  </div>
-
-  <div class="section">
-    <h2>6. Patterns by Ending</h2>
-    <table>
-      <tr><th>Ending</th><th>Gender</th><th>Plural Rule</th><th>Example</th></tr>
-      <tr><td>-ă</td><td>Feminine</td><td>→ -e</td><td>casă → case</td></tr>
-      <tr><td>-e</td><td>Feminine</td><td>→ -i</td><td>floare → flori</td></tr>
-      <tr><td>-ie</td><td>Feminine</td><td>→ -ii</td><td>familie → familii</td></tr>
-      <tr><td>consonant</td><td>Masculine/Neuter</td><td>→ -i / -e / -uri</td><td>scaun → scaune</td></tr>
-      <tr><td>-l</td><td>Masculine</td><td>→ -i</td><td>copil → copii</td></tr>
-    </table>
-  </div>
-
-
-
+  <script>
+    function toggleDarkMode() {
+      document.body.classList.toggle("light-mode");
+    }
+  </script>
 </body>
 </html>
+
