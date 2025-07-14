@@ -2,56 +2,94 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Let's Talk About Food</title>
   <style>
-    * {
-      box-sizing: border-box;
+    :root {
+      --bg-dark: #121212;
+      --text-dark: #f0f0f0;
+      --card-bg-dark: #1e1e1e;
+      --accent-dark: #4caf50;
+      --table-bg-dark: #2a2a2a;
+      --table-border-dark: #555;
+      --table-alt-dark: #333;
+      --code-bg-dark: #333;
+      --example-border-dark: #4caf50;
+      --button-bg-dark: #333;
+      --button-hover-dark: #4caf50;
+
+      --bg-light: #f9f9f9;
+      --text-light: #222222;
+      --card-bg-light: #ffffff;
+      --accent-light: #2a7a2a;
+      --table-bg-light: #ffffff;
+      --table-border-light: #ccc;
+      --table-alt-light: #f0f0f0;
+      --code-bg-light: #eaeaea;
+      --example-border-light: #2a7a2a;
+      --button-bg-light: #ddd;
+      --button-hover-light: #2a7a2a;
     }
 
-    html, body {
+    /* Base styles use dark variables by default */
+    body {
       margin: 0;
       padding: 0;
-      height: 100%;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #888;
-      color: #eee;
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+      transition: background-color 0.4s ease, color 0.4s ease;
       display: flex;
       justify-content: center;
       align-items: flex-start;
+      min-height: 100vh;
     }
 
     .container {
       max-width: 900px;
       padding: 40px 20px;
       text-align: center;
+      width: 100%;
+      box-sizing: border-box;
     }
 
-    a.go-back-button {
+    a.go-back-button, button#toggle-theme {
       display: inline-block;
       margin-bottom: 30px;
-      padding: 10px 20px;
-      background-color: #444;
-      color: white;
-      text-decoration: none;
-      border-radius: 6px;
+      padding: 12px 24px;
+      border-radius: 8px;
       font-weight: bold;
-      transition: background-color 0.3s ease;
+      cursor: pointer;
+      border: 2px solid var(--accent-dark);
+      background-color: var(--button-bg-dark);
+      color: var(--text-dark);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      user-select: none;
     }
 
-    a.go-back-button:hover {
-      background-color: #222;
+    a.go-back-button:hover, button#toggle-theme:hover {
+      background-color: var(--button-hover-dark);
+      color: #000;
+      border-color: var(--button-hover-dark);
+    }
+
+    /* Container for buttons so they appear side by side */
+    .button-row {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
     }
 
     h1, h2, h3 {
       margin-bottom: 15px;
-      color: #fff;
+      color: inherit;
     }
 
     h2.table-title {
       margin-top: 50px;
       font-size: 1.4em;
-      color: #eee;
     }
 
     table {
@@ -59,25 +97,29 @@
       margin: 0 auto 30px auto;
       border-collapse: collapse;
       font-size: 0.95em;
-      background-color: #aaa;
-      color: #222;
+      background-color: var(--table-bg-dark);
+      color: var(--text-dark);
+      border: 1px solid var(--table-border-dark);
       border-radius: 6px;
       overflow: hidden;
+      transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
     }
 
     th, td {
-      border: 1px solid #888;
-      padding: 8px 12px;
-      background-color: #eee;
-      color: #333;
+      border: 1px solid var(--table-border-dark);
+      padding: 10px 14px;
+      background-color: var(--card-bg-dark);
+      color: var(--text-dark);
+      transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
     }
 
     th {
-      background-color: #ccc;
+      background-color: var(--table-alt-dark);
+      color: var(--text-dark);
     }
 
     tr:nth-child(even) td {
-      background-color: #ddd;
+      background-color: var(--table-bg-dark);
     }
 
     ul {
@@ -86,38 +128,110 @@
       padding-left: 20px;
       text-align: left;
       max-width: 600px;
+      color: var(--text-dark);
+      transition: color 0.4s ease;
+    }
+
+    li, p, strong {
+      color: var(--text-dark);
+      transition: color 0.4s ease;
+    }
+
+    code {
+      background-color: var(--code-bg-dark);
+      padding: 3px 6px;
+      border-radius: 4px;
+      font-family: Consolas, monospace;
+      color: #f9f9f9;
+      transition: background-color 0.4s ease;
     }
 
     .example, .bonus, .exercise {
       margin: 20px auto;
       padding: 15px;
-      background-color: #bbb;
-      border-left: 5px solid #666;
-      color: #222;
+      background-color: var(--card-bg-dark);
+      border-left: 5px solid var(--example-border-dark);
+      color: var(--text-dark);
       text-align: left;
       max-width: 600px;
-    }
-
-    p, li, strong {
-      color: #eee;
-    }
-
-    code {
-      background-color: #ccc;
-      padding: 2px 4px;
-      border-radius: 4px;
-      font-family: Consolas, monospace;
-      color: #222;
+      transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
     }
 
     .section {
       margin-bottom: 40px;
     }
+
+    /* LIGHT MODE */
+    body.light-mode {
+      background-color: var(--bg-light);
+      color: var(--text-light);
+    }
+
+    body.light-mode .container {
+      color: var(--text-light);
+    }
+
+    body.light-mode a.go-back-button,
+    body.light-mode button#toggle-theme {
+      background-color: var(--button-bg-light);
+      color: var(--text-light);
+      border-color: var(--accent-light);
+    }
+
+    body.light-mode a.go-back-button:hover,
+    body.light-mode button#toggle-theme:hover {
+      background-color: var(--button-hover-light);
+      color: #fff;
+      border-color: var(--button-hover-light);
+    }
+
+    body.light-mode table {
+      background-color: var(--table-bg-light);
+      color: var(--text-light);
+      border-color: var(--table-border-light);
+    }
+
+    body.light-mode th, body.light-mode td {
+      background-color: var(--card-bg-light);
+      color: var(--text-light);
+      border-color: var(--table-border-light);
+    }
+
+    body.light-mode th {
+      background-color: var(--table-alt-light);
+    }
+
+    body.light-mode tr:nth-child(even) td {
+      background-color: var(--table-bg-light);
+    }
+
+    body.light-mode ul,
+    body.light-mode li,
+    body.light-mode p,
+    body.light-mode strong {
+      color: var(--text-light);
+    }
+
+    body.light-mode code {
+      background-color: var(--code-bg-light);
+      color: #222;
+    }
+
+    body.light-mode .example, 
+    body.light-mode .bonus, 
+    body.light-mode .exercise {
+      background-color: var(--card-bg-light);
+      color: var(--text-light);
+      border-left-color: var(--example-border-light);
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <a href="cheat.html" class="go-back-button">← Go Back</a>
+    <div class="button-row">
+      <a href="cheat.html" class="go-back-button" aria-label="Go Back">← Go Back</a>
+      <button id="toggle-theme" aria-pressed="false" aria-label="Toggle dark and light mode">Switch to Light Mode</button>
+    </div>
 
     <h1>Let's Talk About Food</h1>
 
@@ -206,65 +320,50 @@
         <tr><td>Voi</td><td>veți mânca</td><td>veți bea</td><td>veți găti</td><td>veți cumpăra</td><td>veți încerca</td><td>veți comanda</td></tr>
         <tr><td>Ei/Ele</td><td>vor mânca</td><td>vor bea</td><td>vor găti</td><td>vor cumpăra</td><td>vor încerca</td><td>vor comanda</td></tr>
       </table>
-
-      <div class="example">
-        <strong>Examples:</strong><br/>
-        Eu voi mânca o salată. <br/>
-        Noi vom bea apă. <br/>
-        Ei vor comanda supă.
-      </div>
     </div>
 
     <div class="section">
-      <h2 class="table-title">Cheatsheets & Vocabulary</h2>
-
-      <h3>A. Pronunciation</h3>
-      <ul>
-        <li>"ce" = "che"</li>
-        <li>"ci" = "chi"</li>
-        <li>Vowels are short</li>
-      </ul>
-
-      <h3>B. Food Terms</h3>
-      <ul>
-        <li>Breakfast = Mic dejun</li>
-        <li>Lunch = Prânz</li>
-        <li>Dinner = Cină</li>
-        <li>Dessert = Desert</li>
-      </ul>
-
-      <h3 class="table-title">C. Future Tense Quick Guide</h3>
-      <table>
-        <tr><th>Pronoun</th><th>Will</th></tr>
-        <tr><td>Eu</td><td>Voi</td></tr>
-        <tr><td>Tu</td><td>Vei</td></tr>
-        <tr><td>El/Ea</td><td>Va</td></tr>
-        <tr><td>Noi</td><td>Vom</td></tr>
-        <tr><td>Voi</td><td>Veți</td></tr>
-        <tr><td>Ei/Ele</td><td>Vor</td></tr>
-      </table>
-
-      <div class="example">
-        Vom găti cina. (We will cook dinner.)
+      <h2 class="table-title">Bonus: Imperative Form</h2>
+      <div class="bonus">
+        <p>Use the imperative for commands and requests.</p>
+        <p><strong>Examples:</strong></p>
+        <ul>
+          <li><code>mănâncă!</code> (eat!)</li>
+          <li><code>bea!</code> (drink!)</li>
+          <li><code>gătește!</code> (cook!)</li>
+        </ul>
       </div>
     </div>
 
-    <div class="section">
-      <h2 class="table-title">Easy Sentence-Building Tips</h2>
-      <ul>
-        <li><strong>Tip 1:</strong> Subject + Verb + Object<br/>Ex: Eu voi mânca pâine.</li>
-        <li><strong>Tip 2:</strong> Start with a template<br/>Ex: "I will [verb] [food]."</li>
-        <li><strong>Tip 3:</strong> Use words you know</li>
-        <li><strong>Tip 4:</strong> Use familiar starters:<br/>Ce...? Vrei...? Îmi place... Vom merge...</li>
-      </ul>
-
-      <div class="example">
-        Tu vei bea vin. <br/>
-        Noi vom mânca supă. <br/>
-        El va găti pui.
-      </div>
-    </div>
   </div>
+
+  <script>
+    const toggleBtn = document.getElementById('toggle-theme');
+    const body = document.body;
+
+    // On page load, check localStorage for theme preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      body.classList.add('light-mode');
+      toggleBtn.textContent = 'Switch to Dark Mode';
+      toggleBtn.setAttribute('aria-pressed', 'true');
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      if (body.classList.contains('light-mode')) {
+        // Switch to dark mode
+        body.classList.remove('light-mode');
+        toggleBtn.textContent = 'Switch to Light Mode';
+        toggleBtn.setAttribute('aria-pressed', 'false');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        // Switch to light mode
+        body.classList.add('light-mode');
+        toggleBtn.textContent = 'Switch to Dark Mode';
+        toggleBtn.setAttribute('aria-pressed', 'true');
+        localStorage.setItem('theme', 'light');
+      }
+    });
+  </script>
 </body>
 </html>
-
