@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gradebook</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e0e0e0;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #444;
+    }
+    table {
+      width: 60%;
+      max-width: 600px;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 12px;
+      text-align: left;
+      color: #888;
+    }
+    th {
+      background-color: #eee;
+    }
+    .nav-buttons {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      position: fixed;
+      top: 20px;
+      left: 0;
+      padding: 0 20px;
+      box-sizing: border-box;
+      z-index: 1000;
+    }
+    .back-button, .toggle-button {
+      background-color: #888;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .back-button:hover, .toggle-button:hover {
+      background-color: #666;
+    }
+    .button-container {
+      margin-top: 30px;
+      text-align: center;
+    }
+    .dark-mode {
+      background-color: #222;
+      color: #eee;
+    }
+    .dark-mode table th, .dark-mode table td {
+      color: #ccc;
+      border-color: #555;
+    }
+    .dark-mode th {
+      background-color: #444;
+    }
+    #final-grade {
+      margin-top: 20px;
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #444;
+    }
+    .dark-mode #final-grade {
+      color: #ddd;
+    }
+    #add-grade-form {
+      margin-top: 30px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    #add-grade-form input, #add-grade-form button {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    #add-grade-form button {
+      background-color: #888;
+      color: white;
+      cursor: pointer;
+    }
+    #add-grade-form button:hover {
+      background-color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-buttons">
+    <a href="index.html" class="back-button">Go Back</a>
+    <button class="toggle-button" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+  </div>
+  <h1>Gradebook</h1>
+  <h2>Student: Boyfriend Alexander</h2>
+  <table id="grades-table">
+    <thead>
+      <tr>
+        <th>Subject</th>
+        <th>Grade</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1. Recap numbers and greetings</td><td>96</td></tr>
+      <tr><td>2. Short test</td><td>90</td></tr>
+      <tr><td>3. Test from the first 2 lessons</td><td>80</td></tr>
+      <tr><td>4. Nationalities/People</td><td>98</td></tr>
+      <tr><td>5. Food and verbs</td><td>95</td></tr>
+      <tr><td>6. Let's talk about food</td><td>91</td></tr>
+    </tbody>
+  </table>
+
+  <div id="final-grade">Final Grade: </div>
+
+  <form id="add-grade-form">
+    <input type="text" id="new-subject" placeholder="Subject" required>
+    <input type="number" id="new-grade" placeholder="Grade" min="0" max="100" required>
+    <button type="submit">Add Grade</button>
+  </form>
+
+  <script>
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+    }
+
+    function calculateFinalGrade() {
+      const table = document.getElementById("grades-table");
+      const rows = table.querySelectorAll("tbody tr");
+      let total = 0;
+      let count = 0;
+
+      rows.forEach(row => {
+        const grade = parseFloat(row.cells[1].innerText);
+        if (!isNaN(grade)) {
+          total += grade;
+          count++;
+        }
+      });
+
+      const average = count ? (total / count).toFixed(2) : 0;
+      document.getElementById("final-grade").innerText = `Final Grade: ${average}`;
+    }
+
+    const observer = new MutationObserver(calculateFinalGrade);
+    observer.observe(document.querySelector("#grades-table tbody"), { childList: true, subtree: true });
+
+    document.getElementById("add-grade-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const subject = document.getElementById("new-subject").value;
+      const grade = document.getElementById("new-grade").value;
+
+      if (subject && grade) {
+        const tbody = document.querySelector("#grades-table tbody");
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `<td>${subject}</td><td>${grade}</td>`;
+        tbody.appendChild(newRow);
+        document.getElementById("new-subject").value = "";
+        document.getElementById("new-grade").value = "";
+      }
+    });
+
+    calculateFinalGrade();
+  </script>
+</body>
+</html>
