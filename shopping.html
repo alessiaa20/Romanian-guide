@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Romanian Lesson 2: Shopping, Directions & More</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    .dragging {
+      opacity: 0.5;
+    }
+    .droppable {
+      border: 2px dashed #3b82f6;
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      min-height: 2.5rem;
+      text-align: center;
+      cursor: pointer;
+    }
+    .droppable.hovered {
+      background-color: #bfdbfe;
+      border-color: #2563eb;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200 font-sans transition-colors duration-300">
+
+  <div class="max-w-4xl mx-auto p-6">
+    <header class="flex justify-between items-center mb-6 relative">
+      <a href="index.html" class="absolute left-0 top-0 mt-4 ml-4 px-3 py-1 bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded hover:bg-gray-400 dark:hover:bg-gray-600 transition">
+        ← Go Back
+      </a>
+      <h1 class="text-3xl font-bold mx-auto">Romanian Lesson 2</h1>
+    
+    </header>
+
+    <p class="mb-8 text-lg">
+      Learn how to shop, ask for directions, and talk about plans in Romanian through dialogues, vocabulary, grammar, and interactive exercises.
+    </p>
+
+    <!-- Vocabulary Section -->
+    <section class="mb-12">
+      <h2 class="text-xl font-semibold mb-4">📚 Vocabulary</h2>
+      <div class="grid grid-cols-2 gap-3 bg-white dark:bg-gray-800 p-6 rounded shadow">
+        <div>I want - <strong>Vreau</strong></div>
+        <div>You want - <strong>Vrei</strong></div>
+        <div>He/She wants - <strong>Vrea</strong></div>
+        <div>We want - <strong>Vrem</strong></div>
+        <div>They want - <strong>Vor</strong></div>
+        <div>How much is it? - <strong>Cât costă?</strong></div>
+        <div>Cheap / Expensive - <strong>Ieftin / Scump</strong></div>
+        <div>Left / Right - <strong>Stânga / Dreapta</strong></div>
+        <div>Straight ahead - <strong>Drept înainte</strong></div>
+      </div>
+    </section>
+    <!-- Dialogues Section -->
+    <section class="mb-12 space-y-8">
+      <div>
+        <h2 class="text-xl font-semibold mb-3">🛒 Dialogue: At the Market</h2>
+        <div class="bg-white dark:bg-gray-800 p-6 rounded shadow space-y-1">
+          <p><strong>Seller:</strong> Bună ziua! Cu ce vă pot ajuta?</p>
+          <p><strong>Customer:</strong> Cât costă această geantă?</p>
+          <p><strong>Seller:</strong> Costă 80 de lei.</p>
+          <p><strong>Customer:</strong> Aveți ceva mai ieftin?</p>
+          <p><strong>Seller:</strong> Aceasta este 50 de lei.</p>
+          <p><strong>Customer:</strong> Vreau să o cumpăr.</p>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-semibold mb-3">🛍️ Dialogue: Buying Clothes</h2>
+        <div class="bg-white dark:bg-gray-800 p-6 rounded shadow space-y-1">
+          <p><strong>Shop Assistant:</strong> Bună! Vă pot ajuta cu ceva?</p>
+          <p><strong>Customer:</strong> Da, aș dori să încerc această cămașă.</p>
+          <p><strong>Shop Assistant:</strong> Sigur, unde este cabina de probă.</p>
+          <p><strong>Customer:</strong> Mulțumesc. Cât costă?</p>
+          <p><strong>Shop Assistant:</strong> Este 120 de lei.</p>
+          <p><strong>Customer:</strong> O să o cumpăr. Acceptați cardul?</p>
+          <p><strong>Shop Assistant:</strong> Da, acceptăm.</p>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-semibold mb-3">💳 Dialogue: At the Checkout</h2>
+        <div class="bg-white dark:bg-gray-800 p-6 rounded shadow space-y-1">
+          <p><strong>Cashier:</strong> Bună! Aveți card sau cash?</p>
+          <p><strong>Customer:</strong> Am card.</p>
+          <p><strong>Cashier:</strong> Introduceți codul PIN, vă rog.</p>
+          <p><strong>Customer:</strong> Gata. Mulțumesc!</p>
+          <p><strong>Cashier:</strong> Cu plăcere! O zi bună!</p>
+        </div>
+      </div>
+
+      <div>
+  <h2 class="text-xl font-semibold mb-3">🧺 Dialogue: At the Grocery Store</h2>
+  <div class="bg-white dark:bg-gray-800 p-6 rounded shadow space-y-1">
+    <p><strong>Clerk:</strong> Bună ziua! Doriți o pungă?</p>
+    <p><strong>Customer:</strong> Da, vă rog.</p>
+    <p><strong>Clerk:</strong> Aveți card de fidelitate?</p>
+    <p><strong>Customer:</strong> Nu, nu am.</p>
+    <p><strong>Clerk:</strong> Totalul este 65 de lei.</p>
+    <p><strong>Customer:</strong> Plătesc cu cardul.</p>
+  </div>
+</div>
+<div>
+  <h2 class="text-xl font-semibold mb-3">👞 Dialogue: Trying on Shoes</h2>
+  <div class="bg-white dark:bg-gray-800 p-6 rounded shadow space-y-1">
+    <p><strong>Customer:</strong> Aveți mărimea 42 la acest model?</p>
+    <p><strong>Salesperson:</strong> Da, un moment, vă aduc.</p>
+    <p><strong>Customer:</strong> Pot să le încerc?</p>
+    <p><strong>Salesperson:</strong> Desigur. Cabina este acolo.</p>
+    <p><strong>Customer:</strong> Sunt foarte comozi. Îi iau!</p>
+  </div>
+</div>
+<div>
+  <h2 class="text-xl font-semibold mb-3">☕ Dialogue: Ordering at a Café</h2>
+  <div class="bg-white dark:bg-gray-800 p-6 rounded shadow space-y-1">
+    <p><strong>Barista:</strong> Bună! Ce doriți să comandați?</p>
+    <p><strong>Customer:</strong> Un cappuccino și o apă plată, vă rog.</p>
+    <p><strong>Barista:</strong> Doriți zahăr?</p>
+    <p><strong>Customer:</strong> Nu, mulțumesc.</p>
+    <p><strong>Barista:</strong> Comanda dumneavoastră va fi gata imediat.</p>
+  </div>
+</div>
+
+
+
+    <!-- Dialogues Section -->
+    <section class="mb-12 space-y-8">
+      <!-- Dialogue blocks omitted for brevity (same as in your version) -->
+    </section>
+
+    <!-- Grammar Section -->
+    <section class="mb-12">
+      <h2 class="text-xl font-semibold mb-4">📈 Grammar: Future Tense ("o să")</h2>
+      <table class="w-full table-auto bg-white dark:bg-gray-800 rounded shadow">
+        <thead class="bg-gray-200 dark:bg-gray-700">
+          <tr>
+            <th class="p-3 text-left">English</th>
+            <th class="p-3 text-left">Romanian</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="p-3 border-t border-gray-300 dark:border-gray-600">I am going to eat</td>
+            <td class="p-3 border-t border-gray-300 dark:border-gray-600">O să mănânc</td>
+          </tr>
+          <tr>
+            <td class="p-3 border-t border-gray-300 dark:border-gray-600">You are going to go</td>
+            <td class="p-3 border-t border-gray-300 dark:border-gray-600">O să mergi</td>
+          </tr>
+          <tr>
+            <td class="p-3 border-t border-gray-300 dark:border-gray-600">He will buy it</td>
+            <td class="p-3 border-t border-gray-300 dark:border-gray-600">O să-l cumpere</td>
+          </tr>
+          <tr>
+            <td class="p-3 border-t border-gray-300 dark:border-gray-600">We will come</td>
+            <td class="p-3 border-t border-gray-300 dark:border-gray-600">O să venim</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ✅ Exercises Button -->
+    <div class="text-center mt-12">
+      <a href="ex1.html" class="inline-block bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold py-3 px-6 rounded-xl shadow transition">
+        ➕ Go to Exercises
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const toggleBtn = document.getElementById('dark-mode-toggle');
+    const htmlEl = document.documentElement;
+
+    function applyDarkMode(enabled) {
+      if (enabled) {
+        htmlEl.classList.add('dark');
+      } else {
+        htmlEl.classList.remove('dark');
+      }
+      localStorage.setItem('darkMode', enabled);
+    }
+
+    (() => {
+      const saved = localStorage.getItem('darkMode');
+      if (saved !== null) {
+        applyDarkMode(saved === 'true');
+      } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        applyDarkMode(prefersDark);
+      }
+    })();
+
+    toggleBtn.addEventListener('click', () => {
+      const isDark = htmlEl.classList.contains('dark');
+      applyDarkMode(!isDark);
+    });
+
+    function checkAnswer(inputId, correctAnswer) {
+      const input = document.getElementById(inputId);
+      const result = document.getElementById(inputId + '-result');
+      const userAnswer = input.value.trim();
+
+      if (!userAnswer) {
+        result.textContent = 'Please enter an answer.';
+        result.style.color = 'red';
+        return;
+      }
+
+      if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+        result.textContent = 'Correct! 🎉';
+        result.style.color = 'green';
+      } else {
+        result.textContent = 'Incorrect. Try again.';
+        result.style.color = 'red';
+      }
+    }
+
+    function tryAgain(inputId) {
+      const input = document.getElementById(inputId);
+      const result = document.getElementById(inputId + '-result');
+      input.value = '';
+      result.textContent = '';
+    }
+  </script>
+</body>
+</html>
