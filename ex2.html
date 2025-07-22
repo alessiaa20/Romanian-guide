@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title> Shopping, Directions & More</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <script>
+    if (
+      localStorage.getItem('darkMode') === 'true' ||
+      (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    ) {
+      document.documentElement.classList.add('dark');
+    }
+  </script>
+  <style>
+    .dragging {
+      opacity: 0.5;
+    }
+    .droppable {
+      border: 2px dashed #888;
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      min-height: 2.5rem;
+      text-align: center;
+      cursor: pointer;
+    }
+    .droppable.hovered {
+      background-color: #bfdbfe;
+      border-color: #888;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200 font-sans transition-colors duration-300">
+  <div class="w-full h-2 bg-gray-300 dark:bg-gray-700">
+    <div class="h-full bg-blue-500" style="width: 40%;"></div>
+  </div>
+  <div class="max-w-4xl mx-auto p-6">
+    <header class="flex justify-between items-center mb-6 relative">
+      <a href="ex1.html" class="absolute left-0 top-0 mt-4 ml-4 px-3 py-1 bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded hover:bg-gray-400 dark:hover:bg-gray-600 transition">← Go Back</a>
+      <h1 class="text-3xl font-bold mx-auto">The verb 'to want'</h1>
+      <div class="absolute right-0 top-0 mt-4 mr-4 space-x-2">
+      </div>
+    </header>
+
+    <p class="mb-8 text-lg">Learn how to shop, ask for directions, and talk about plans in Romanian through dialogues, vocabulary, grammar, and interactive exercises.</p>
+
+    <section class="mb-12">
+      <h2 class="text-xl font-semibold mb-6">🧪 Practice Exercises</h2>
+
+      <div class="bg-white dark:bg-gray-800 p-6 rounded shadow">
+        <h3 class="text-lg font-semibold mb-4">Match the English words to the Romanian ones:</h3>
+        <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">Drag the Romanian words to match the English words.</p>
+
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold mb-2">English</h4>
+            <ul id="english-list" class="space-y-3">
+              <li class="p-3 bg-gray-100 dark:bg-gray-700 rounded" data-key="vreau">I want</li>
+              <li class="p-3 bg-gray-100 dark:bg-gray-700 rounded" data-key="vrei">You want</li>
+              <li class="p-3 bg-gray-100 dark:bg-gray-700 rounded" data-key="vreau2">He/She wants</li>
+              <li class="p-3 bg-gray-100 dark:bg-gray-700 rounded" data-key="vrem">We want</li>
+              <li class="p-3 bg-gray-100 dark:bg-gray-700 rounded" data-key="vor">They want</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-2">Romanian (drag these)</h4>
+            <ul id="romanian-list" class="space-y-3">
+              <li draggable="true" class="p-3 bg-blue-200 dark:bg-blue-700 rounded cursor-move hover:bg-blue-300 dark:hover:bg-blue-600" data-key="vrei">Vrei</li>
+              <li draggable="true" class="p-3 bg-blue-200 dark:bg-blue-700 rounded cursor-move hover:bg-blue-300 dark:hover:bg-blue-600" data-key="vreau">Vreau</li>
+              <li draggable="true" class="p-3 bg-blue-200 dark:bg-blue-700 rounded cursor-move hover:bg-blue-300 dark:hover:bg-blue-600" data-key="vrem">Vrem</li>
+              <li draggable="true" class="p-3 bg-blue-200 dark:bg-blue-700 rounded cursor-move hover:bg-blue-300 dark:hover:bg-blue-600" data-key="vor">Vor</li>
+              <li draggable="true" class="p-3 bg-blue-200 dark:bg-blue-700 rounded cursor-move hover:bg-blue-300 dark:hover:bg-blue-600" data-key="vreau2">Vrea</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-6 space-x-3">
+          <button class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded" onclick="checkMatching()">Check Matches</button>
+          <button class="bg-gray-500 hover:bg-gray-600 text-white px-5 py-2 rounded" onclick="resetMatching()">Try Again</button>
+        </div>
+
+        <p id="matching-result" class="mt-4 font-semibold"></p>
+      </div>
+    </section>
+  </div>
+
+  <audio id="correctSound" src="https://assets.mixkit.co/sfx/preview/mixkit-video-game-win-2016.mp3"></audio>
+  <audio id="incorrectSound" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
+
+  <script>
+    const toggleBtn = document.getElementById('dark-mode-toggle');
+    const htmlEl = document.documentElement;
+
+    function applyDarkMode(enabled) {
+      htmlEl.classList.toggle('dark', enabled);
+      localStorage.setItem('darkMode', enabled);
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      const isDark = htmlEl.classList.contains('dark');
+      applyDarkMode(!isDark);
+    });
+
+    const romanianList = document.getElementById('romanian-list');
+    const englishList = document.getElementById('english-list');
+    let draggedItem = null;
+    const correctSound = document.getElementById('correctSound');
+    const incorrectSound = document.getElementById('incorrectSound');
+
+    romanianList.querySelectorAll('li').forEach(item => {
+      item.addEventListener('dragstart', () => {
+        draggedItem = item;
+        item.classList.add('dragging');
+      });
+      item.addEventListener('dragend', () => {
+        draggedItem = null;
+        item.classList.remove('dragging');
+      });
+    });
+
+    englishList.querySelectorAll('li').forEach(item => {
+      item.addEventListener('dragover', e => {
+        e.preventDefault();
+        item.classList.add('hovered');
+      });
+      item.addEventListener('dragleave', () => item.classList.remove('hovered'));
+      item.addEventListener('drop', e => {
+        e.preventDefault();
+        item.classList.remove('hovered');
+        if (draggedItem) {
+          item.textContent = item.textContent.split(':')[0] + ': ' + draggedItem.textContent;
+          item.dataset.match = draggedItem.dataset.key;
+        }
+      });
+    });
+
+    function checkMatching() {
+      const result = document.getElementById('matching-result');
+      const correctMatches = {
+        vreau: 'I want',
+        vrei: 'You want',
+        vreau2: 'He/She wants',
+        vrem: 'We want',
+        vor: 'They want',
+      };
+
+      let correctCount = 0;
+      englishList.querySelectorAll('li').forEach(item => {
+        const engText = item.textContent.split(':')[0].trim();
+        const matchedKey = item.dataset.match || '';
+        if (matchedKey && correctMatches[matchedKey] === engText) {
+          correctCount++;
+          item.style.color = 'green';
+        } else {
+          item.style.color = 'red';
+        }
+      });
+
+      result.textContent = correctCount === Object.keys(correctMatches).length
+        ? 'All matches are correct! 🎉'
+        : `${correctCount} out of ${Object.keys(correctMatches).length} are correct. Keep trying!`;
+      result.style.color = correctCount === Object.keys(correctMatches).length ? 'green' : 'red';
+
+      if (correctCount === Object.keys(correctMatches).length) {
+        correctSound.play();
+      } else {
+        incorrectSound.play();
+      }
+    }
+
+    function resetMatching() {
+      englishList.querySelectorAll('li').forEach(item => {
+        const eng = item.textContent.split(':')[0];
+        item.textContent = eng;
+        item.dataset.match = '';
+        item.style.color = '';
+      });
+      romanianList.querySelectorAll('li').forEach(item => romanianList.appendChild(item));
+      document.getElementById('matching-result').textContent = '';
+    }
+  </script>
+</body>
+</html>
