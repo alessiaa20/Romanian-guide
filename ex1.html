@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 2 Practice – Shopping Dialogues</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans transition duration-300 ease-in-out">
+
+  <div class="max-w-4xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+
+    <header class="flex justify-between items-center mb-6 relative">
+      <a href="shopping.html" class="absolute left-0 top-0 mt-4 ml-4 px-3 py-1 bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded hover:bg-gray-400 dark:hover:bg-gray-600 transition">← Go Back</a>
+      <h1 class="text-3xl font-bold mx-auto">Practice: Shopping Dialogues</h1>
+      <div class="absolute right-0 top-0 mt-4 mr-4 space-x-2">
+    
+        <a href="ex2.html" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition">Next →</a>
+      </div>
+    </header>
+    <!-- Exercises -->
+    <section class="space-y-10">
+      <div class="space-y-8">
+
+        <!-- Exercise 1 -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md" id="exercise1">
+          <label for="ex1" class="block font-medium mb-3 text-lg">
+            🧺 Fill in the blank: <br />
+            <span class="italic text-gray-600 dark:text-gray-400">Clerk: "Bună ziua! Doriți o ______?"</span> <br />
+            (Hint: word for “bag”)
+          </label>
+          <input id="ex1" type="text" class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 dark:bg-gray-700 dark:text-white" placeholder="Your answer..." />
+          <div class="mt-4 flex gap-3">
+            <button onclick="checkAnswer('ex1', ['punga'])" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Check</button>
+            <button onclick="tryAgain('ex1')" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Try Again</button>
+          </div>
+          <p id="ex1-result" class="mt-2 font-semibold text-sm"></p>
+        </div>
+
+        <!-- Exercise 2 -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md" id="exercise2">
+          <label for="ex2" class="block font-medium mb-3 text-lg">
+            👞 Complete the dialogue: <br />
+            <span class="italic text-gray-600 dark:text-gray-400">Customer: "Pot să le ______?"</span> <br />
+            (Hint: try them on)
+          </label>
+          <input id="ex2" type="text" class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 dark:bg-gray-700 dark:text-white" placeholder="Your answer..." />
+          <div class="mt-4 flex gap-3">
+            <button onclick="checkAnswer('ex2', ['incerc', 'probez'])" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Check</button>
+            <button onclick="tryAgain('ex2')" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Try Again</button>
+          </div>
+          <p id="ex2-result" class="mt-2 font-semibold text-sm"></p>
+        </div>
+
+        <!-- Exercise 3 -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md" id="exercise3">
+          <label for="ex3" class="block font-medium mb-3 text-lg">
+            ☕ Translate to English: <br />
+            <span class="italic text-gray-600 dark:text-gray-400">"Ce doriți să comandați?"</span>
+          </label>
+          <input id="ex3" type="text" class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 dark:bg-gray-700 dark:text-white" placeholder="Your answer..." />
+          <div class="mt-4 flex gap-3">
+            <button onclick="checkAnswer('ex3', ['what would you like to order?', 'what do you want to order?'])" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Check</button>
+            <button onclick="tryAgain('ex3')" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Try Again</button>
+          </div>
+          <p id="ex3-result" class="mt-2 font-semibold text-sm"></p>
+        </div>
+
+        <!-- Exercise 4 -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md" id="exercise4">
+          <label for="ex4" class="block font-medium mb-3 text-lg">
+            🏨 Translate to Romanian: <br />
+            <span class="italic text-gray-600 dark:text-gray-400">"Where is the hotel?"</span>
+          </label>
+          <input id="ex4" type="text" class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 dark:bg-gray-700 dark:text-white" placeholder="Your answer..." />
+          <div class="mt-4 flex gap-3">
+            <button onclick="checkAnswer('ex4', ['unde este hotelul'])" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Check</button>
+            <button onclick="tryAgain('ex4')" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Try Again</button>
+          </div>
+          <p id="ex4-result" class="mt-2 font-semibold text-sm"></p>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+  <!-- JavaScript Logic -->
+  <script>
+    const tries = {
+      ex1: 0,
+      ex2: 0,
+      ex3: 0,
+      ex4: 0
+    };
+
+    const maxTries = 3;
+
+    function checkAnswer(id, correctAnswers) {
+      const input = document.getElementById(id);
+      const result = document.getElementById(`${id}-result`);
+      const userAnswer = input.value.trim().toLowerCase();
+
+      if (!userAnswer) {
+        result.textContent = '⚠️ Please enter an answer.';
+        result.className = 'mt-2 text-red-500 font-semibold text-sm';
+        return;
+      }
+
+      if (tries[id] >= maxTries) {
+        result.textContent = `❌ No tries left. Correct: "${correctAnswers[0]}"`;
+        result.className = 'mt-2 text-red-600 font-semibold text-sm';
+        return;
+      }
+
+      tries[id]++;
+      const isCorrect = correctAnswers.some(ans => userAnswer === ans.toLowerCase());
+
+      if (isCorrect) {
+        result.textContent = `✅ Correct! (${tries[id]} ${tries[id] === 1 ? 'try' : 'tries'})`;
+        result.className = 'mt-2 text-green-600 font-semibold text-sm';
+      } else {
+        if (tries[id] < maxTries) {
+          result.textContent = `❌ Incorrect. ${maxTries - tries[id]} tries left.`;
+          result.className = 'mt-2 text-yellow-500 font-semibold text-sm';
+        } else {
+          result.textContent = `❌ Incorrect. Correct answer: "${correctAnswers[0]}"`;
+          result.className = 'mt-2 text-red-600 font-semibold text-sm';
+        }
+      }
+    }
+
+    function tryAgain(id) {
+      document.getElementById(id).value = '';
+      document.getElementById(`${id}-result`).textContent = '';
+      tries[id] = 0;
+    }
+  </script>
+
+</body>
+</html>
