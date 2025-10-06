@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Quiz: Ordinează zilele săptămânii</title>
+  <style>
+    :root{
+      --bg:#0f1724; --card:#0b1220; --accent:#7dd3fc; --muted:#94a3b8;
+      --good:#10b981; --bad:#f43f5e; --glass: rgba(255,255,255,0.04);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;background:linear-gradient(180deg,#071124 0%, #081826 60%);color:#e6eef8;display:flex;align-items:center;justify-content:center;padding:32px}
+
+    .card{width:900px;max-width:100%;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:16px;padding:22px;box-shadow:0 8px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03)}
+
+    header{display:flex;align-items:center;gap:16px;margin-bottom:12px}
+    header h1{font-size:20px;margin:0}
+    header p{margin:0;color:var(--muted);font-size:13px}
+
+    .area{display:grid;grid-template-columns:1fr 370px;gap:20px}
+    @media (max-width:880px){.area{grid-template-columns:1fr}}
+
+    .list-wrap{background:var(--card);padding:18px;border-radius:12px;border:1px solid var(--glass)}
+    .hint{font-size:13px;color:var(--muted);margin-bottom:8px}
+
+    ul.day-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+    li.day{background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px 14px;border-radius:10px;display:flex;align-items:center;justify-content:space-between;cursor:grab;border:1px solid rgba(255,255,255,0.025);transition:transform .15s ease, box-shadow .15s ease}
+    li.day.dragging{opacity:0.7;transform:scale(.99);box-shadow:0 8px 20px rgba(2,6,23,0.6)}
+    .handle{display:inline-flex;align-items:center;gap:10px}
+    .num{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,0.03);display:inline-grid;place-items:center;color:var(--accent);font-weight:700}
+    .day .text{font-weight:600}
+    .day .sub{color:var(--muted);font-size:13px}
+
+    .controls{display:flex;flex-direction:column;gap:12px;background:var(--card);padding:18px;border-radius:12px;border:1px solid var(--glass)}
+    .btn{display:inline-block;padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+    .btn-primary{background:linear-gradient(90deg,var(--accent),#60a5fa);color:#022;box-shadow:0 6px 18px rgba(125,211,252,0.08)}
+    .btn-outline{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--accent)}
+    .result{margin-top:6px;padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.02)}
+
+    .score{font-size:24px;font-weight:800}
+    .feedback{display:grid;gap:8px;margin-top:10px}
+    .row{display:flex;gap:8px;align-items:center}
+    .chip{padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03)}
+
+    .legend{display:flex;gap:8px;align-items:center;margin-top:10px}
+    .led{width:12px;height:12px;border-radius:4px}
+    .good{background:linear-gradient(180deg,var(--good),#06b38f)}
+    .bad{background:linear-gradient(180deg,var(--bad),#ff6b7a)}
+
+    footer{margin-top:14px;color:var(--muted);font-size:13px}
+
+    /* highlight correct/incorrect after submit */
+    li.day.correct{border-left:6px solid var(--good);background:linear-gradient(90deg, rgba(16,185,129,0.06), rgba(255,255,255,0.01))}
+    li.day.incorrect{border-left:6px solid var(--bad);background:linear-gradient(90deg, rgba(244,63,94,0.04), rgba(255,255,255,0.01))}
+  </style>
+</head>
+<body>
+  <main class="card" role="main">
+    <header>
+      <div>
+        <h1>📚 Quiz: Ordinează zilele săptămânii (în română)</h1>
+        <p>Trage zilele pentru a le pune în ordinea corectă, apoi apasă <strong>Verifică</strong>.</p>
+      </div>
+    </header>
+
+    <section class="area">
+      <div class="list-wrap">
+        <p class="hint">Menține apasat pe o zi și trage pentru a o repoziționa.</p>
+        <ul id="dayList" class="day-list" aria-label="Lista zilelor" tabindex="0"></ul>
+        <footer>Știai? În România prima zi a săptămânii este considerată <strong>Luni</strong>.</footer>
+      </div>
+
+      <aside class="controls">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button id="shuffleBtn" class="btn btn-outline">Amestecă</button>
+          <button id="checkBtn" class="btn btn-primary">Verifică</button>
+          <button id="resetBtn" class="btn btn-outline">Reîncarcă corect</button>
+        </div>
+
+        <div id="resultBox" class="result" aria-live="polite" hidden>
+          <div class="score" id="scoreText">Scor: —</div>
+          <div class="feedback" id="feedback"></div>
+          <div class="legend"><span class="led good"></span><span>Corect</span><span class="led bad"></span><span>Greșit</span></div>
+        </div>
+
+        <div style="margin-top:6px;color:var(--muted);font-size:13px">
+          Sugestie: poți folosi și tastele săgeți pentru a selecta elementele (accesibilitate).
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const zileCorecte = ["Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă","Duminică"];
+
+    // Pornim cu o listă amestecată
+    let zile = [...zileCorecte];
+
+    const dayList = document.getElementById('dayList');
+    const shuffleBtn = document.getElementById('shuffleBtn');
+    const checkBtn = document.getElementById('checkBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const resultBox = document.getElementById('resultBox');
+    const scoreText = document.getElementById('scoreText');
+    const feedback = document.getElementById('feedback');
+
+    function shuffle(array){
+      // Fisher-Yates
+      for(let i=array.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [array[i],array[j]]=[array[j],array[i]];
+      }
+      return array;
+    }
+
+    function renderList(){
+      dayList.innerHTML='';
+      zile.forEach((zi, idx)=>{
+        const li = document.createElement('li');
+        li.className='day';
+        li.draggable = true;
+        li.dataset.index = idx;
+        li.innerHTML = `
+          <div class="handle">
+            <div class="num">${idx+1}</div>
+            <div>
+              <div class="text">${zi}</div>
+              <div class="sub">Trage pentru a repoziționa</div>
+            </div>
+          </div>
+        `;
+        addDragHandlers(li);
+        dayList.appendChild(li);
+      });
+    }
+
+    // Drag & drop handlers
+    let dragEl = null;
+    function addDragHandlers(li){
+      li.addEventListener('dragstart', (e)=>{
+        dragEl = li;
+        li.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+      });
+      li.addEventListener('dragend', ()=>{
+        li.classList.remove('dragging');
+        dragEl = null;
+      });
+
+      li.addEventListener('dragover', (e)=>{
+        e.preventDefault();
+        const target = e.currentTarget;
+        if(target === dragEl) return;
+        const rect = target.getBoundingClientRect();
+        const after = (e.clientY - rect.top) > rect.height/2; // bottom half?
+        if(after){
+          target.parentNode.insertBefore(dragEl, target.nextSibling);
+        } else {
+          target.parentNode.insertBefore(dragEl, target);
+        }
+        refreshIndices();
+      });
+
+      // keyboard accessibility: move with arrow keys when focused
+      li.tabIndex = 0;
+      li.addEventListener('keydown', (e)=>{
+        const key = e.key;
+        const cur = Array.from(dayList.children).indexOf(li);
+        if(key === 'ArrowUp' && cur>0){
+          dayList.insertBefore(li, dayList.children[cur-1]);
+          refreshIndices();
+          e.preventDefault();
+        } else if(key === 'ArrowDown' && cur < dayList.children.length-1){
+          dayList.insertBefore(dayList.children[cur+1], li);
+          refreshIndices();
+          e.preventDefault();
+        }
+      });
+    }
+
+    function refreshIndices(){
+      // update displayed numbers and zile order
+      const items = Array.from(dayList.children);
+      zile = items.map((el)=>el.querySelector('.text').textContent.trim());
+      items.forEach((el,i)=> el.querySelector('.num').textContent = i+1);
+    }
+
+    shuffleBtn.addEventListener('click', ()=>{
+      zile = shuffle([...zileCorecte]);
+      renderList();
+      resultBox.hidden = true;
+    });
+
+    checkBtn.addEventListener('click', ()=>{
+      refreshIndices();
+      // Compare
+      let score = 0;
+      feedback.innerHTML = '';
+      const items = Array.from(dayList.children);
+      items.forEach((el, i)=>{
+        el.classList.remove('correct','incorrect');
+        const text = el.querySelector('.text').textContent.trim();
+        const ok = (text === zileCorecte[i]);
+        if(ok){ score++; el.classList.add('correct'); }
+        else { el.classList.add('incorrect'); }
+
+        const row = document.createElement('div');
+        row.className = 'row';
+        row.innerHTML = `<div class="chip">${i+1}.</div><div class="chip">${text}</div><div class="chip">${ok? '✔ Corect':'❌ Greșit (corect: '+zileCorecte[i]+')'}</div>`;
+        feedback.appendChild(row);
+      });
+      scoreText.textContent = `Scor: ${score}/${zileCorecte.length}`;
+      resultBox.hidden = false;
+      // nice focus
+      resultBox.scrollIntoView({behavior:'smooth', block:'center'});
+    });
+
+    resetBtn.addEventListener('click', ()=>{
+      zile = [...zileCorecte];
+      renderList();
+      resultBox.hidden = true;
+    });
+
+    // initial render (shuffled)
+    (function init(){
+      zile = shuffle([...zileCorecte]);
+      renderList();
+    })();
+  </script>
+</body>
+</html>
