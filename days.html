@@ -74,9 +74,11 @@
 
       <aside class="controls">
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button id="shuffleBtn" class="btn btn-outline">Amestecă</button>
-          <button id="checkBtn" class="btn btn-primary">Verifică</button>
-          <button id="resetBtn" class="btn btn-outline">Reîncarcă corect</button>
+          <button id="shuffleBtn" class="btn btn-outline">Shuffle</button>
+          <button id="checkBtn" class="btn btn-primary">Check</button>
+          <button id="resetBtn" class="btn btn-outline">Reload with the correct answers</button>
+          <!-- Go Back button -->
+          <a href="arrange.html" class="btn btn-outline">⟵ Înapoi</a>
         </div>
 
         <div id="resultBox" class="result" aria-live="polite" hidden>
@@ -92,12 +94,10 @@
     </section>
   </main>
 
+  <!-- The script remains unchanged -->
   <script>
     const zileCorecte = ["Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă","Duminică"];
-
-    // Pornim cu o listă amestecată
     let zile = [...zileCorecte];
-
     const dayList = document.getElementById('dayList');
     const shuffleBtn = document.getElementById('shuffleBtn');
     const checkBtn = document.getElementById('checkBtn');
@@ -107,7 +107,6 @@
     const feedback = document.getElementById('feedback');
 
     function shuffle(array){
-      // Fisher-Yates
       for(let i=array.length-1;i>0;i--){
         const j=Math.floor(Math.random()*(i+1));
         [array[i],array[j]]=[array[j],array[i]];
@@ -136,7 +135,6 @@
       });
     }
 
-    // Drag & drop handlers
     let dragEl = null;
     function addDragHandlers(li){
       li.addEventListener('dragstart', (e)=>{
@@ -154,7 +152,7 @@
         const target = e.currentTarget;
         if(target === dragEl) return;
         const rect = target.getBoundingClientRect();
-        const after = (e.clientY - rect.top) > rect.height/2; // bottom half?
+        const after = (e.clientY - rect.top) > rect.height/2;
         if(after){
           target.parentNode.insertBefore(dragEl, target.nextSibling);
         } else {
@@ -163,7 +161,6 @@
         refreshIndices();
       });
 
-      // keyboard accessibility: move with arrow keys when focused
       li.tabIndex = 0;
       li.addEventListener('keydown', (e)=>{
         const key = e.key;
@@ -181,7 +178,6 @@
     }
 
     function refreshIndices(){
-      // update displayed numbers and zile order
       const items = Array.from(dayList.children);
       zile = items.map((el)=>el.querySelector('.text').textContent.trim());
       items.forEach((el,i)=> el.querySelector('.num').textContent = i+1);
@@ -195,7 +191,6 @@
 
     checkBtn.addEventListener('click', ()=>{
       refreshIndices();
-      // Compare
       let score = 0;
       feedback.innerHTML = '';
       const items = Array.from(dayList.children);
@@ -213,7 +208,6 @@
       });
       scoreText.textContent = `Scor: ${score}/${zileCorecte.length}`;
       resultBox.hidden = false;
-      // nice focus
       resultBox.scrollIntoView({behavior:'smooth', block:'center'});
     });
 
@@ -223,7 +217,6 @@
       resultBox.hidden = true;
     });
 
-    // initial render (shuffled)
     (function init(){
       zile = shuffle([...zileCorecte]);
       renderList();
