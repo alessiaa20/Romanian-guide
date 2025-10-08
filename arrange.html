@@ -3,114 +3,168 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cheatsheets</title>
+  <title>Arrange in Order</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: linear-gradient(135deg, #d0d0d0, #a0a0a0);
-      font-family: 'Comfortaa', cursive, Arial, sans-serif;
-      color: #333;
-      text-align: center;
-      padding: 50px 20px;
       min-height: 100vh;
+      font-family: 'Outfit', sans-serif;
+      background: linear-gradient(135deg, #2b2d42, #3d405b, #1b1d2c);
       display: flex;
       flex-direction: column;
       justify-content: center;
-      box-sizing: border-box;
+      align-items: center;
+      padding: 50px 20px;
+      color: #eee;
+      overflow: hidden;
+      position: relative;
     }
 
-    /* Container for the top button to keep it left-aligned */
-    .top-button-container {
+    /* Soft glowing background blobs */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.5;
+      animation: float 20s infinite alternate ease-in-out;
+      z-index: 0;
+    }
+    .blob1 { width: 400px; height: 400px; background: #cdb4db; top: -120px; left: -100px; }
+    .blob2 { width: 500px; height: 500px; background: #a2d2ff; bottom: -150px; right: -120px; animation-delay: 6s; }
+
+    @keyframes float {
+      0% { transform: translateY(0) translateX(0); }
+      100% { transform: translateY(-60px) translateX(40px); }
+    }
+
+    /* Card */
+    .card {
+      position: relative;
+      background: rgba(40, 44, 62, 0.85);
+      backdrop-filter: blur(14px);
+      border-radius: 28px;
+      padding: 60px 50px;
+      max-width: 700px;
       width: 100%;
-      text-align: left;
-      margin-bottom: 40px;
+      text-align: center;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      z-index: 1;
+      animation: fadeUp 0.9s ease forwards;
+      transform: translateY(40px);
+      opacity: 0;
     }
-
-    .button {
-      display: inline-block;
-      background-color: #f0f0f0;
-      color: #666;
-      font-weight: 700;
-      font-size: 1.1rem;
-      padding: 15px 30px;
-      margin: 10px 12px;
-      border-radius: 30px;
-      text-decoration: none;
-      box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1);
-      transition: 
-        background-color 0.3s ease,
-        color 0.3s ease,
-        transform 0.2s ease,
-        box-shadow 0.3s ease;
-      user-select: none;
-      cursor: pointer;
-    }
-
-    .button:hover,
-    .button:focus {
-      background-color: #888;
-      color: #fff;
-      box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-      transform: translateY(-3px) scale(1.05);
-      outline: none;
-    }
-
-    .button:active {
-      transform: translateY(-1px) scale(1);
-      box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.15);
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
     }
 
     h1 {
       font-size: 3.5rem;
-      margin-bottom: 0.2em;
-      color: #444;
-      text-shadow: 1px 1px 3px #bbb;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #fcd5ce;
+      text-shadow: 0 0 15px rgba(252,213,206,0.7);
     }
 
     p {
-      font-size: 1.3rem;
+      font-size: 1.5rem;
+      font-weight: 400;
       margin-bottom: 40px;
-      color: #555;
-      max-width: 450px;
-      margin-left: auto;
-      margin-right: auto;
-      line-height: 1.5;
-      text-shadow: 1px 1px 2px #eee;
+      color: #cddafd;
     }
 
-    /* Responsive scaling for smaller screens */
-    @media (max-width: 480px) {
-      h1 {
-        font-size: 2.4rem;
-      }
-      p {
-        font-size: 1rem;
-      }
-      .button {
-        padding: 12px 24px;
-        font-size: 1rem;
-        margin: 8px 8px;
-      }
-      .top-button-container {
-        margin-bottom: 20px;
-      }
+    /* Buttons grid */
+    .buttons {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .button {
+      background: linear-gradient(135deg, #cdb4db, #a2d2ff);
+      border-radius: 18px;
+      padding: 20px;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #222;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .button:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.35), 0 0 14px rgba(255,255,255,0.2);
+    }
+
+    /* Ripple effect */
+    .button::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      width: 0; height: 0;
+      background: rgba(255,255,255,0.6);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .button:active::after {
+      width: 200px; height: 200px;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0.3;
+      transition: all 0.5s ease-out;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 50px;
+      text-align: center;
+      font-size: 1rem;
+      color: #aaa;
+      z-index: 2;
+    }
+    footer::before {
+      content: "";
+      display: block;
+      width: 60%;
+      margin: 0 auto 10px;
+      height: 2px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 2px;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      h1 { font-size: 2.5rem; }
+      p { font-size: 1.2rem; }
+      .button { font-size: 1.1rem; padding: 16px; }
     }
   </style>
 </head>
 <body>
+  <!-- Background blobs -->
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
 
-  <div class="top-button-container">
-    <a href="index.html" class="button" aria-label="Go back to homepage">← Go Back</a>
+  <div class="card" role="main">
+    <h1>Arrange in Order</h1>
+    <p>Arrange in order exercises for better learning</p>
+    <div class="buttons">
+      <a href="days.html" class="button">The days of the week</a>
+      <a href="months.html" class="button">The months</a>
+      <a href="index.html" class="button">← Go Back</a>
+    </div>
   </div>
 
-  <h1>Arrange in order</h1>
-  <p>Arrange in order exercises for better learning</p>
-
-  <a href="days.html" class="button">The days of the week</a>
-    <a href="months.html" class="button">The months</a>
-
-  
-
+  <footer>
+    <p>© 2025 Arrange in Order · Designed by Alessia</p>
+  </footer>
 </body>
 </html>
