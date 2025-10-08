@@ -5,173 +5,258 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gradebook</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #e0e0e0;
-      color: #333;
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
+
+    *, *::before, *::after {
+      box-sizing: border-box;
       margin: 0;
-      padding: 20px;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Outfit', sans-serif;
+      background: linear-gradient(135deg, #2b2d42, #3d405b, #1b1d2c);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      min-height: 100vh;
-      transition: background-color 0.3s, color 0.3s;
-    }
-    h1, h2 {
-      text-align: center;
-      color: #444;
-    }
-    table {
-      width: 60%;
-      max-width: 600px;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 12px;
-      text-align: left;
-      color: #888;
-    }
-    th {
-      background-color: #eee;
-    }
-    .nav-buttons {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      position: fixed;
-      top: 20px;
-      left: 0;
-      padding: 0 20px;
-      box-sizing: border-box;
-      z-index: 1000;
-    }
-    .back-button, .toggle-button {
-      background-color: #888;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 4px;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    .back-button:hover, .toggle-button:hover {
-      background-color: #666;
-    }
-    .button-container {
-      margin-top: 30px;
-      text-align: center;
-    }
-    .dark-mode {
-      background-color: #222;
+      padding: 40px 10px;
       color: #eee;
+      overflow-x: hidden;
+      position: relative;
     }
-    .dark-mode table th, .dark-mode table td {
-      color: #ccc;
-      border-color: #555;
+
+    /* Background blobs */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.5;
+      animation: float 20s infinite alternate ease-in-out;
+      z-index: 0;
     }
-    .dark-mode th {
-      background-color: #444;
+    .blob1 {
+      width: 350px;
+      height: 350px;
+      background: #cdb4db;
+      top: -100px;
+      left: -100px;
     }
+    .blob2 {
+      width: 450px;
+      height: 450px;
+      background: #a2d2ff;
+      bottom: -130px;
+      right: -100px;
+      animation-delay: 6s;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0) translateX(0); }
+      100% { transform: translateY(-60px) translateX(40px); }
+    }
+
+    /* Card layout */
+    .card {
+      position: relative;
+      background: rgba(40,44,62,0.85);
+      backdrop-filter: blur(14px);
+      border-radius: 28px;
+      padding: 30px 25px;
+      width: 100%;
+      max-width: 750px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      text-align: center;
+      z-index: 1;
+      animation: fadeUp 0.9s ease forwards;
+      transform: translateY(40px);
+      opacity: 0;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 2.3rem;
+      color: #fcd5ce;
+      text-shadow: 0 0 15px rgba(252,213,206,0.7);
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      color: #cddafd;
+      margin-bottom: 25px;
+      word-wrap: break-word;
+    }
+
+    /* Table styling */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      overflow: hidden;
+      min-width: 400px;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      color: #eee;
+      word-wrap: break-word;
+    }
+
+    th {
+      background: rgba(252,213,206,0.2);
+      color: #fff;
+    }
+
+    tr:nth-child(even) {
+      background: rgba(255,255,255,0.05);
+    }
+
     #final-grade {
-      margin-top: 20px;
-      font-size: 1.2em;
+      font-size: 1.2rem;
       font-weight: bold;
-      color: #444;
+      margin-top: 15px;
+      margin-bottom: 20px;
+      color: #fcd5ce;
     }
-    .dark-mode #final-grade {
-      color: #ddd;
-    }
+
+    /* Form styling */
     #add-grade-form {
-      margin-top: 30px;
       display: flex;
-      gap: 10px;
       flex-wrap: wrap;
       justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
     }
-    #add-grade-form input, #add-grade-form button {
+
+    #add-grade-form input {
       padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+      min-width: 130px;
+      flex: 1 1 120px;
     }
+
     #add-grade-form button {
-      background-color: #888;
-      color: white;
+      padding: 10px 20px;
+      border-radius: 18px;
+      border: none;
+      font-size: 1rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, #cdb4db, #a2d2ff);
+      color: #222;
       cursor: pointer;
+      transition: all 0.25s ease;
     }
+
     #add-grade-form button:hover {
-      background-color: #666;
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+
+    /* Back button */
+    .back-button {
+      display: inline-block;
+      margin-bottom: 20px;
+      padding: 12px 24px;
+      border-radius: 18px;
+      font-weight: 600;
+      text-decoration: none;
+      color: #222;
+      background: linear-gradient(135deg, #cdb4db, #a2d2ff);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+      transition: all 0.25s ease;
+    }
+
+    .back-button:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.35);
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 600px) {
+      h1 { font-size: 1.8rem; }
+      h2 { font-size: 1rem; }
+      th, td { font-size: 0.9rem; padding: 8px; }
+      #add-grade-form input, #add-grade-form button {
+        font-size: 0.9rem;
+        padding: 8px;
+      }
+      .card { padding: 20px; }
     }
   </style>
 </head>
 <body>
-  <div class="nav-buttons">
-    <a href="index.html" class="back-button">Go Back</a>
-    <button class="toggle-button" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+
+  <div class="card">
+    <a href="index.html" class="back-button">← Go Back</a>
+
+    <h1>Gradebook</h1>
+    <h2>Student: Fiance Alexander</h2>
+
+    <div class="table-container">
+      <table id="grades-table">
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th>Grade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1. Recap numbers and greetings</td><td>96</td></tr>
+          <tr><td>2. Short test</td><td>90</td></tr>
+          <tr><td>3. Test from the first 2 lessons</td><td>80</td></tr>
+          <tr><td>4. Nationalities/People</td><td>98</td></tr>
+          <tr><td>5. Food and verbs</td><td>95</td></tr>
+          <tr><td>6. Let's talk about food</td><td>91</td></tr>
+          <tr><td>7. Conjugations</td><td>97</td></tr>
+          <tr><td>8. MIDTERM EXAM</td><td>100</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="final-grade">Final Grade: </div>
+
+    <form id="add-grade-form">
+      <input type="text" id="new-subject" placeholder="Subject" required>
+      <input type="number" id="new-grade" placeholder="Grade" min="0" max="100" required>
+      <button type="submit">Add Grade</button>
+    </form>
   </div>
-  <h1>Gradebook</h1>
-  <h2>Student: Boyfriend Alexander</h2>
-  <table id="grades-table">
-    <thead>
-      <tr>
-        <th>Subject</th>
-        <th>Grade</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td>1. Recap numbers and greetings</td><td>96</td></tr>
-      <tr><td>2. Short test</td><td>90</td></tr>
-      <tr><td>3. Test from the first 2 lessons</td><td>80</td></tr>
-      <tr><td>4. Nationalities/People</td><td>98</td></tr>
-      <tr><td>5. Food and verbs</td><td>95</td></tr>
-      <tr><td>6. Let's talk about food</td><td>91</td></tr>
-      <tr><td>7. Conjugations</td><td>97</td></tr>
-      <tr><td>8. MIDTERM EXAM</td><td>100</td></tr>
-    </tbody>
-  </table>
-
-  <div id="final-grade">Final Grade: </div>
-
-  <form id="add-grade-form">
-    <input type="text" id="new-subject" placeholder="Subject" required>
-    <input type="number" id="new-grade" placeholder="Grade" min="0" max="100" required>
-    <button type="submit">Add Grade</button>
-  </form>
 
   <script>
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark-mode');
-    }
-
     function calculateFinalGrade() {
       const table = document.getElementById("grades-table");
       const rows = table.querySelectorAll("tbody tr");
-      let total = 0;
-      let count = 0;
-
+      let total = 0, count = 0;
       rows.forEach(row => {
         const grade = parseFloat(row.cells[1].innerText);
-        if (!isNaN(grade)) {
-          total += grade;
-          count++;
-        }
+        if(!isNaN(grade)){ total += grade; count++; }
       });
-
-      const average = count ? (total / count).toFixed(2) : 0;
-      document.getElementById("final-grade").innerText = `Final Grade: ${average}`;
+      const avg = count ? (total/count).toFixed(2) : 0;
+      document.getElementById("final-grade").innerText = `Final Grade: ${avg}`;
     }
 
-    const observer = new MutationObserver(calculateFinalGrade);
-    observer.observe(document.querySelector("#grades-table tbody"), { childList: true, subtree: true });
-
-    document.getElementById("add-grade-form").addEventListener("submit", function(e) {
+    document.getElementById("add-grade-form").addEventListener("submit", e=>{
       e.preventDefault();
       const subject = document.getElementById("new-subject").value;
       const grade = document.getElementById("new-grade").value;
-
-      if (subject && grade) {
+      if(subject && grade){
         const tbody = document.querySelector("#grades-table tbody");
         const newRow = document.createElement("tr");
         newRow.innerHTML = `<td>${subject}</td><td>${grade}</td>`;
@@ -181,6 +266,8 @@
       }
     });
 
+    const observer = new MutationObserver(calculateFinalGrade);
+    observer.observe(document.querySelector("#grades-table tbody"), { childList: true, subtree: true });
     calculateFinalGrade();
   </script>
 </body>
