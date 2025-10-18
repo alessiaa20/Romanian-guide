@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Familia mea mare – My Big Family</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Outfit', sans-serif;
+      background: linear-gradient(135deg, #2b2d42, #3d405b, #1b1d2c);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 50px 20px;
+      color: #eee;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    /* Background blobs */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.5;
+      animation: float 20s infinite alternate ease-in-out;
+      z-index: 0;
+    }
+    .blob1 { width: 400px; height: 400px; background: #cdb4db; top: -120px; left: -100px; }
+    .blob2 { width: 500px; height: 500px; background: #a2d2ff; bottom: -150px; right: -120px; animation-delay: 6s; }
+
+    @keyframes float {
+      0% { transform: translateY(0) translateX(0); }
+      100% { transform: translateY(-60px) translateX(40px); }
+    }
+
+    /* Card */
+    .card {
+      position: relative;
+      background: rgba(40, 44, 62, 0.85);
+      backdrop-filter: blur(14px);
+      border-radius: 28px;
+      padding: 50px 60px;
+      max-width: 900px;
+      width: 100%;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      z-index: 1;
+      animation: fadeUp 0.9s ease forwards;
+      transform: translateY(40px);
+      opacity: 0;
+      text-align: left;
+      line-height: 1.8;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #fcd5ce;
+      text-align: center;
+      text-shadow: 0 0 15px rgba(252,213,206,0.7);
+    }
+
+    p {
+      font-size: 1.15rem;
+      color: #cddafd;
+      margin-bottom: 14px;
+    }
+
+    /* Go back button */
+    .button {
+      background: linear-gradient(135deg, #cdb4db, #a2d2ff);
+      border-radius: 18px;
+      padding: 18px 32px;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #222;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+      margin-top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .button:hover {
+      transform: translate(-50%, -6px) scale(1.02);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.35), 0 0 14px rgba(255,255,255,0.2);
+    }
+
+    .button::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      width: 0; height: 0;
+      background: rgba(255,255,255,0.6);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .button:active::after {
+      width: 200px; height: 200px;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0.3;
+      transition: all 0.5s ease-out;
+    }
+
+    footer {
+      margin-top: 50px;
+      text-align: center;
+      font-size: 1rem;
+      color: #aaa;
+      z-index: 2;
+    }
+
+    footer::before {
+      content: "";
+      display: block;
+      width: 60%;
+      margin: 0 auto 10px;
+      height: 2px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 2px;
+    }
+
+    @media (max-width: 600px) {
+      .card { padding: 30px 25px; }
+      h1 { font-size: 2.3rem; }
+      p { font-size: 1rem; }
+      .button { font-size: 1.1rem; padding: 14px 26px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+
+  <div class="card">
+    <h1>Familia mea mare – My Big Family</h1>
+
+    <p>1. Bună! Mă numesc Alexandru. Eu sunt din Statele Unite. Locuiesc în orașul Jacksonville, dar iubita mea locuiește într-un oraș mic din România. Sunt fericit pentru că familia mea este mare și frumoasă.</p>
+
+    <p>Tatăl meu este un bărbat înalt. El lucrează mult și gătește bine. Mama mea este o femeie calmă și bună. Ea este profesoară și înțelege pe toată lumea. Ei sunt părinții mei, și eu îi iubesc foarte mult.</p>
+
+    <p>Eu am un frate mai mare și un frate mai mic. Fratele meu mai mare este un bărbat serios. El este soț și are o soție frumoasă. Soția lui este și cumnata mea. Ea este urâtă și îi place să gătească. Fratele meu mai mic este un băiat tânăr și fericit. El este copilul mamei și al tatălui meu, ca și mine. El vrea să meargă la oraș cu autobuzul și să vadă gara. Eu merg cu el.</p>
+
+    <p>Am și o soră mai mică. Ea este o fată bună și zâmbește mereu. Sora mea citește o carte în fiecare zi. Ea vrea să fie profesoară ca mama. Noi suntem o familie unită.</p>
+
+    <p>2. Bunicul meu și bunica mea locuiesc în orașul Brașov. Bunicul este un om înțelept și bunica este o femeie veselă. Bunicul fierbe apă pentru ceai, iar bunica gătește supă pentru toată familia. Eu spun: „Bunico, este foarte bună supa!” Bunica zâmbește și spune: „Mulțumesc, dragul meu!”</p>
+
+    <p>Eu înțeleg că familia este importantă. Bunicul și bunica au și un străbunic și o străbunică care locuiesc la sat. Ei sunt foarte bătrâni, dar fericiți. Străbunica are o floare frumoasă în grădină, iar străbunicul citește o carte veche în fiecare dimineață.</p>
+
+    <p>3. Eu am și un unchi și o mătușă. Unchiul meu este fratele tatălui meu. El este doctor. Mătușa mea este soția unchiului. Ea este o femeie urâtă și inteligentă. Ei au o fiică mică. Ea este fiica lor și este și nepoata mea. Eu sunt unchiul ei. Nepoata mea este copil mic, dar vorbește bine. Ea spune: „Bună, unchiule! Vreau o floare!” Eu râd și îi dau o floare roșie.</p>
+
+    <p>Mai am și o verişoară. Ea locuiește în Italia cu partenerul ei. Partenerul ei este italian. El este un bărbat înalt și prietenos. Ea spune: „Sunt soție acum!” Eu spun: „Sună bine! Hai să facem o călătorie în Italia!” Toată familia vrea să meargă.</p>
+
+    <p>4. În Italia, eu merg la aeroport cu soțul și soția mea. Avem un bagaj mare, un pașaport și un bilet. Eu spun: „Unde este autobuzul spre aeroport?” Un bărbat răspunde: „Mergeți drept înainte și virați spre stânga.” Eu spun: „Mulțumesc!” Când ajungem, mâncăm pizza. Soția mea spune: „Este delicioasă!” Eu spun: „Sună bine! Hai să mâncăm mai mult!”</p>
+
+    <p>Acolo, în Italia, locuiește și socrul meu și soacra mea. Soacra mea este o femeie amabilă. Ea gătește paste și fierbe cafea în fiecare dimineață. Socru este glumeț. El spune mereu: „Vrei o cafea?” Eu spun: „Da, mulțumesc!”</p>
+
+    <p>5. Eu am și o cumnată în Spania. Ea este sora soției mele. Cumnatul meu, fratele soției mele, locuiește în Franța. El este un om muncitor. Ei sunt fericiți. Cumnata mea are o fiică și un fiu. Fiul ei este băiat mic. El mănâncă mult. Fiica ei este fată veselă. Ea spune: „Vreau să merg la școală!” Eu înțeleg că ei sunt copii deștepți.</p>
+
+    <p>Când merg în călătorie, eu am nevoie de pașaport, bilet și hartă. Privesc harta și spun: „Unde este gara?” O femeie îmi răspunde: „Mergeți drept înainte, apoi spre dreapta.” Eu spun: „Mulțumesc! Nu este departe?” Ea spune: „Nu, este aproape!” Eu spun: „Sună bine! Hai să mergem!”</p>
+
+    <p>6. Pe drum văd flori, copii, femei și bărbați. Copilul mic spune: „Mamă, tată, unde mergem?” Mama spune: „Mergem la bunica și la bunicul.” Tatăl zâmbește. Toată familia merge împreună.</p>
+
+    <a href="stories.html" class="button">← Go Back</a>
+  </div>
+
+  <footer>
+    <p>© 2025 Flashcards · Designed by Alessia</p>
+  </footer>
+</body>
+</html>
