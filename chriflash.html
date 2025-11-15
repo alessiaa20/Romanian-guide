@@ -25,7 +25,7 @@
 
     /* Flashcard area */
     .flashcard-area{display:flex;flex-direction:column;gap:12px}
-    .card{height:200px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.04),var(--glass));display:flex;align-items:center;justify-content:center;flex-direction:column;padding:16px;cursor:pointer;transition:transform .35s,box-shadow .25s}
+    .card{height:200px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.04),var(--glass));display:flex;align-items:center;justify-content:center;flex-direction:column;padding:16px;cursor:pointer;transition:transform .35s,box-shadow .25s;backface-visibility:hidden}
     .card.flipped{transform:rotateY(180deg)}
     .term{font-size:36px;letter-spacing:.6px}
     .definition{font-size:20px;color:var(--muted)}
@@ -33,7 +33,7 @@
 
     .sidebar{display:flex;flex-direction:column;gap:14px}
     .list{max-height:320px;overflow:auto;padding:8px;border-radius:8px;background:linear-gradient(180deg,rgba(255,255,255,0.03),transparent)}
-    .list-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;gap:8px}
+    .list-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;gap:8px;cursor:pointer}
     .list-item:hover{background:rgba(255,255,255,0.06)}
     .badge{background:rgba(255,255,255,0.08);padding:6px 8px;border-radius:8px}
 
@@ -140,67 +140,16 @@
 
   <script>
     const vocab = [
-      ["Dumnezeu","God"],
-      ["Isus","Jesus"],
-      ["Duhul Sfânt","Holy Spirit"],
-      ["Răscumpărare","Redemption"],
-      ["Dreptate","Righteousness"],
-      ["Credință","Faith"],
-      ["Păcat","Sin"],
-      ["Mântuire","Salvation"],
-      ["Har","Grace"],
-      ["Rugăciune","Prayer"],
-      ["Biblie","Bible"],
-      ["Biserică","Church"],
-      ["Părtășie","Fellowship"],
-      ["Închinare","Worship"],
-      ["Ucenic","Disciple"],
-      ["Botez","Baptism"],
-      ["Înviere","Resurrection"],
-      ["Rai","Heaven"],
-      ["Iad","Hell"],
-      ["Evanghelizare","Evangelism"],
-      ["Poruncă","Commandment"],
-      ["Legământ","Covenant"],
-      ["Pocăință","Repentance"],
-      ["Milă","Mercy"],
-
-      ["A duce","To take / to bring"],
-      ["Lipsa","Lack"],
-      ["Pastorul","The shepherd"],
-      ["Paște","Easter / grazing"],
-      ["Pășuni","Pastures"],
-      ["Verzi","Green"],
-      ["Odihna","Rest"],
-      ["Ape","Waters"],
-      ["Înviorează","Refreshing"],
-      ["Sufletul","The soul"],
-      ["Povățuiește","Advises"],
-      ["Cărări","Paths"],
-      ["Pricină","Reason"],
-      ["Umblu","I walk"],
-      ["Prin","Through"],
-      ["Valea","The valley"],
-      ["Umbrei","Shadow"],
-      ["Morții","Death"],
-      ["Tem","I am afraid"],
-      ["Niciun","None"],
-      ["Căci","Though"],
-      ["Întinzi","You stretch"],
-      ["Potrivnicilor","Adversaries"],
-      ["Ungi","You anoint"],
-      ["Capul","Head"],
-      ["Untdelemn","Oil"],
-      ["Plin","Full"],
-      ["Îndurarea","Mercy"],
-      ["Însoți","Accompany"],
-      ["Unt","Butter"],
-      ["De","Of"],
-      ["Lemn","Wood"],
-      ["Toiagul","Staff"],
-      ["Nuiaua","Rod"],
-      ["Mângâie","Caress"],
-      ["Ta","Yours"]
+      ["Dumnezeu","God"],["Isus","Jesus"],["Duhul Sfânt","Holy Spirit"],["Răscumpărare","Redemption"],["Dreptate","Righteousness"],["Credință","Faith"],
+      ["Păcat","Sin"],["Mântuire","Salvation"],["Har","Grace"],["Rugăciune","Prayer"],["Biblie","Bible"],["Biserică","Church"],
+      ["Părtășie","Fellowship"],["Închinare","Worship"],["Ucenic","Disciple"],["Botez","Baptism"],["Înviere","Resurrection"],["Rai","Heaven"],
+      ["Iad","Hell"],["Evanghelizare","Evangelism"],["Poruncă","Commandment"],["Legământ","Covenant"],["Pocăință","Repentance"],["Milă","Mercy"],
+      ["A duce","To take / to bring"],["Lipsa","Lack"],["Pastorul","The shepherd"],["Paște","Easter / grazing"],["Pășuni","Pastures"],
+      ["Verzi","Green"],["Odihna","Rest"],["Ape","Waters"],["Înviorează","Refreshing"],["Sufletul","The soul"],["Povățuiește","Advises"],
+      ["Cărări","Paths"],["Pricină","Reason"],["Umblu","I walk"],["Prin","Through"],["Valea","The valley"],["Umbrei","Shadow"],
+      ["Morții","Death"],["Tem","I am afraid"],["Niciun","None"],["Căci","Though"],["Întinzi","You stretch"],["Potrivnicilor","Adversaries"],
+      ["Ungi","You anoint"],["Capul","Head"],["Untdelemn","Oil"],["Plin","Full"],["Îndurarea","Mercy"],["Însoți","Accompany"],
+      ["Unt","Butter"],["De","Of"],["Lemn","Wood"],["Toiagul","Staff"],["Nuiaua","Rod"],["Mângâie","Caress"],["Ta","Yours"]
     ];
 
     let order = [...Array(vocab.length).keys()];
@@ -227,7 +176,7 @@
     function updateListHighlight(){
       Array.from(vocabList.children).forEach((el,k)=>{
         el.style.opacity = (order[index]===k?1:0.55);
-        el.querySelector('.badge').textContent = mastered.has(k)?'✓':' ';
+        el.querySelector('.badge').textContent = mastered.has(k)?'✓':'';
       });
     }
 
@@ -260,8 +209,7 @@
     document.getElementById('reset').onclick = ()=>{ if(confirm('Reset progress?')){ mastered = new Set(); saveMastered(); renderCard(); buildList(); }}
 
     document.getElementById('mode').onchange = (e)=>{
-      const v = e.target.value; 
-      document.getElementById('typingArea').style.display = v==='typing'?'block':'none';
+      document.getElementById('typingArea').style.display = e.target.value==='typing'?'block':'none';
     }
 
     document.getElementById('checkBtn').onclick = ()=>{
@@ -274,15 +222,14 @@
         document.getElementById('typingInput').value=''; 
         index=(index+1)%order.length; 
         renderCard(); 
-      }
-      else{ alert('Not quite — correct: ' + correct); }
+      } else { alert('Not quite — correct: ' + correct); }
     }
 
     function saveMastered(){ localStorage.setItem('mastered',JSON.stringify(Array.from(mastered))); }
-
     function shuffleOrder(){ order = order.sort(()=>Math.random()-0.5); index=0; }
 
-    function startMatch(){
+    // Match game
+    document.getElementById('startMatch').onclick = ()=>{
       const area = document.getElementById('matchArea'); 
       area.innerHTML='';
       const left = vocab.map((v,i)=>({t:v[0],i}));
@@ -308,41 +255,22 @@
           firstTile.style.background='linear-gradient(90deg,var(--accent),#c4b5fd)';
           el.style.background='linear-gradient(90deg,var(--accent),#c4b5fd)';
           firstTile.onclick = el.onclick = null;
-        } else {
-          alert('Not a match. Try again.');
-        }
+        } else { alert('Not a match. Try again.'); }
         firstTile.style.opacity = 1; firstTile = null;
       }
     }
 
-    function shuffleArray(a){ 
-      return a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]); 
-    }
-
-    document.getElementById('startMatch').onclick = startMatch;
+    function shuffleArray(a){ return a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]); }
 
     document.getElementById('listenAll').onclick = ()=>{
-      (async ()=>{ 
-        for(let i=0;i<vocab.length;i++){ 
-          speak(vocab[i][0]); 
-          await new Promise(r=>setTimeout(r,600)); 
-        } 
-      })(); 
+      (async ()=>{
+        for(let i=0;i<vocab.length;i++){ speak(vocab[i][0]); await new Promise(r=>setTimeout(r,600)); }
+      })();
     }
 
     document.getElementById('showAll').onclick = ()=>{ alert(vocab.map(v=>v[0]+" — "+v[1]).join('\n')); }
 
-    document.getElementById('export').onclick = ()=>{
-      const blob = new Blob([document.documentElement.outerHTML],{type:'text/html'});
-      const url = URL.createObjectURL(blob); 
-      const a=document.createElement('a'); 
-      a.href=url; 
-      a.download='romanian_vocab.html'; 
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    buildList(); 
+    buildList();
     renderCard();
 
     document.addEventListener('keydown', (e)=>{
@@ -357,3 +285,4 @@
   </script>
 </body>
 </html>
+
