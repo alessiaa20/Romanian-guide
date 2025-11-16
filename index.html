@@ -1,175 +1,677 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Romanian Guide</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Romanian Guide — Interactive (Updated)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
+  :root{
+    --bg1:#2b2d42; --bg2:#3d405b; --bg3:#1b1d2c;
+    --card-bg: rgba(40,44,62,0.92);
+    --accent1:#cdb4db; --accent2:#a2d2ff;
+    --muted:#cddafd;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Outfit',sans-serif;
+    min-height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:40px 18px;
+    background:linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+    color:#eee;
+    overflow:hidden;
+  }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  /* Loading screen */
+  #loader{
+    position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(180deg,rgba(0,0,0,0.55),rgba(0,0,0,0.6));
+    z-index:9999;color:#fff;font-weight:700;flex-direction:column;
+  }
+  .spinner{
+    width:84px;height:84px;border-radius:18px;
+    background:linear-gradient(135deg,var(--accent1),var(--accent2));
+    filter:blur(6px);opacity:0.95;box-shadow:0 12px 40px rgba(0,0,0,0.5);
+    transform:scale(.95);
+    animation:loaderPop 900ms cubic-bezier(.2,.9,.3,1) infinite alternate;
+  }
+  @keyframes loaderPop{to{transform:scale(1.03) rotate(4deg)}}
 
-    body {
-      min-height: 100vh;
-      font-family: 'Outfit', sans-serif;
-      background: linear-gradient(135deg, #2b2d42, #3d405b, #1b1d2c);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 50px 20px;
-      color: #eee;
-      overflow: hidden;
-      position: relative;
-    }
+  /* Background blobs */
+  .blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:0.45;pointer-events:none;z-index:0}
+  .blob1{width:420px;height:420px;background:var(--accent1);top:-120px;left:-100px}
+  .blob2{width:520px;height:520px;background:var(--accent2);bottom:-150px;right:-120px}
 
-    /* Soft glowing background blobs */
-    .blob {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(90px);
-      opacity: 0.5;
-      animation: float 20s infinite alternate ease-in-out;
-      z-index: 0;
-    }
-    .blob1 { width: 400px; height: 400px; background: #cdb4db; top: -120px; left: -100px; }
-    .blob2 { width: 500px; height: 500px; background: #a2d2ff; bottom: -150px; right: -120px; animation-delay: 6s; }
+  /* Soft sparkles */
+  .spark{position:absolute;width:6px;height:6px;border-radius:50%;background:#fff;opacity:0.16;pointer-events:none;z-index:0}
 
-    @keyframes float {
-      0% { transform: translateY(0) translateX(0); }
-      100% { transform: translateY(-60px) translateX(40px); }
-    }
+  /* Card */
+  .card{
+    position:relative;z-index:5;
+    width:100%;max-width:820px;padding:52px;border-radius:28px;
+    background:var(--card-bg);backdrop-filter:blur(12px);
+    box-shadow:0 18px 60px rgba(0,0,0,0.6);text-align:center;
+    transform-style:preserve-3d;transition:box-shadow .15s;
+    border:3px solid rgba(255,255,255,0.06);
+  }
+  .card:hover{box-shadow:0 28px 80px rgba(0,0,0,0.7)}
+  h1{font-size:3.2rem;margin-bottom:8px;color:#fcd5ce;text-shadow:0 0 12px rgba(252,213,206,0.6)}
+  #subtitle{font-size:1.35rem;color:var(--muted);margin-bottom:26px;white-space:nowrap;overflow:hidden;border-right:3px solid var(--muted);width:0;
+    animation:typing 3s steps(40) forwards,blink .8s step-end infinite}
+  @keyframes typing{to{width:100%}}@keyframes blink{50%{border-color:transparent}}
 
-    /* Card */
-    .card {
-      position: relative;
-      background: rgba(40, 44, 62, 0.85);
-      backdrop-filter: blur(14px);
-      border-radius: 28px;
-      padding: 60px 50px;
-      max-width: 700px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
-      z-index: 1;
-      animation: fadeUp 0.9s ease forwards;
-      transform: translateY(40px);
-      opacity: 0;
-    }
-    @keyframes fadeUp {
-      to { opacity: 1; transform: translateY(0); }
-    }
+  .buttons{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:12px}
+  .button{
+    display:flex;align-items:center;justify-content:center;padding:18px;border-radius:16px;
+    font-weight:700;font-size:1.05rem;color:#222;background:linear-gradient(135deg,var(--accent1),var(--accent2));
+    box-shadow:0 8px 20px rgba(0,0,0,0.25);cursor:pointer;text-decoration:none;user-select:none;transform-origin:center;
+    transition:transform .18s cubic-bezier(.2,.9,.3,1),box-shadow .18s,filter .18s;
+    position:relative;overflow:hidden;
+  }
+  .button:hover{transform:translateY(-6px) scale(1.02);filter:brightness(1.06)}
+  .button:active{transform:scale(.96)}
 
-    h1 {
-      font-size: 3.5rem;
-      font-weight: 700;
-      margin-bottom: 16px;
-      color: #fcd5ce;
-      text-shadow: 0 0 15px rgba(252,213,206,0.7);
-    }
+  /* Mode toggle + settings */
+  .top-controls{position:absolute;right:20px;top:18px;z-index:30;display:flex;gap:10px}
+  .icon-btn{background:rgba(255,255,255,0.12);padding:10px 12px;border-radius:12px;cursor:pointer;font-weight:700;color:#fff;backdrop-filter:blur(6px)}
+  .icon-btn:hover{background:rgba(255,255,255,0.2)}
 
-    p {
-      font-size: 1.5rem;
-      font-weight: 400;
-      margin-bottom: 40px;
-      color: #cddafd;
-    }
+  /* Mascot (improved) */
+  .mascot{
+    position:fixed;left:18px;bottom:18px;width:110px;height:110px;border-radius:18px;background:linear-gradient(135deg,var(--accent2),var(--accent1));
+    z-index:40;display:flex;align-items:center;justify-content:center;color:#122;color:#122;font-weight:900;box-shadow:0 18px 40px rgba(0,0,0,0.55);
+    transform-origin:center;pointer-events:auto;cursor:pointer;transition:transform .18s,box-shadow .18s,border-radius .3s;
+  }
+  .mascot:hover{transform:translateY(-6px) rotate(-4deg);box-shadow:0 26px 60px rgba(0,0,0,0.6)}
+  .mascot .face{font-size:2rem}
+  .mascot .bubble{position:absolute;left:120%;bottom:50%;transform:translateY(50%);background:rgba(255,255,255,0.95);color:#111;padding:8px 12px;border-radius:10px;white-space:nowrap;display:none;font-weight:700}
+  .mascot.show-bubble .bubble{display:block}
 
-    /* Buttons grid */
-    .buttons {
-      display: grid;
-      gap: 20px;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    }
+  /* Settings panel */
+  .panel{position:fixed;right:18px;top:68px;width:320px;background:rgba(20,24,36,0.9);padding:18px;border-radius:14px;z-index:60;backdrop-filter:blur(8px);color:#ddd;display:none}
+  .panel h3{color:#f7e7e4;margin-bottom:8px}
+  .row{display:flex;align-items:center;justify-content:space-between;margin:8px 0}
+  .toggle{width:46px;height:26px;border-radius:18px;background:rgba(255,255,255,0.14);position:relative;cursor:pointer}
+  .toggle .knob{position:absolute;left:3px;top:3px;width:20px;height:20px;background:#fff;border-radius:50%;transition:left .16s}
+  .toggle.on{background:linear-gradient(90deg,var(--accent1),var(--accent2))}
+  .toggle.on .knob{left:23px}
 
-    .button {
-      background: linear-gradient(135deg, #cdb4db, #a2d2ff);
-      border-radius: 18px;
-      padding: 20px;
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: #222;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-      transition: all 0.25s ease;
-      position: relative;
-      overflow: hidden;
-    }
+  /* Modal for games */
+  .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,12,0.55);z-index:80;display:none;align-items:center;justify-content:center}
+  .modal{width:92%;max-width:980px;background:rgba(32,36,48,0.96);padding:18px;border-radius:12px;color:#eee;box-shadow:0 18px 60px rgba(0,0,0,0.7);max-height:86vh;overflow:auto}
+  .modal .close{position:absolute;right:18px;top:12px;cursor:pointer;background:rgba(255,255,255,0.06);padding:8px;border-radius:10px}
 
-    .button:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.35), 0 0 14px rgba(255,255,255,0.2);
-    }
+  /* Game layout */
+  .game-grid{display:grid;grid-template-columns:1fr 320px;gap:14px}
+  .game-area{background:rgba(255,255,255,0.02);padding:14px;border-radius:10px;min-height:320px}
+  .side{background:rgba(255,255,255,0.02);padding:12px;border-radius:10px;min-height:320px}
+  .small{font-size:0.95rem;color:#cfcfdf;margin-bottom:8px}
 
-    /* Ripple */
-    .button::after {
-      content: "";
-      position: absolute;
-      border-radius: 50%;
-      width: 0; height: 0;
-      background: rgba(255,255,255,0.6);
-      opacity: 0;
-      pointer-events: none;
-    }
-    .button:active::after {
-      width: 200px; height: 200px;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      opacity: 0.3;
-      transition: all 0.5s ease-out;
-    }
+  /* Achievements toast */
+  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:26px;background:linear-gradient(135deg,var(--accent1),var(--accent2));padding:12px 18px;border-radius:12px;color:#222;font-weight:700;z-index:120;display:none}
 
-    /* Footer */
-    footer {
-      margin-top: 50px;
-      text-align: center;
-      font-size: 1rem;
-      color: #aaa;
-      z-index: 2;
-    }
-    footer::before {
-      content: "";
-      display: block;
-      width: 60%;
-      margin: 0 auto 10px;
-      height: 2px;
-      background: rgba(255,255,255,0.2);
-      border-radius: 2px;
-    }
+  /* Mini-game controls */
+  .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+  .btn-mini{padding:8px 10px;background:rgba(255,255,255,0.06);border-radius:10px;cursor:pointer}
 
-    /* Responsive */
-    @media (max-width: 600px) {
-      h1 { font-size: 2.5rem; }
-      p { font-size: 1.2rem; }
-      .button { font-size: 1.1rem; padding: 16px; }
-    }
-  </style>
+  /* Accessibility focus */
+  .button:focus,.icon-btn:focus,.mascot:focus{outline:3px solid rgba(255,255,255,0.08);outline-offset:4px}
+
+  /* Responsive */
+  @media (max-width:880px){
+    .game-grid{grid-template-columns:1fr}
+    .panel{width:86%}
+  }
+</style>
 </head>
 <body>
-  <!-- Background blobs -->
-  <div class="blob blob1"></div>
-  <div class="blob blob2"></div>
 
-  <div class="card" role="main">
-    <h1>Romanian Guide 🇷🇴</h1>
-    <p>Learn Romanian with fun, modern tools ✨</p>
-    <div class="buttons">
-      <a href="crosswords.html" class="button">🧩 Crosswords</a>
-      <a href="cheat.html" class="button">📘 Cheatsheets</a>
-      <a href="flashcards.html" class="button">🃏 Flashcards</a>
-      <a href="gradebook.html" class="button">📊 Gradebook</a>
-      <a href="lessons.html" class="button">📖 Lessons</a>
-      <a href="arrange.html" class="button">🔀 Arrange</a>
-       <a href="stories.html" class="button">🕵️‍♂️ Stories</a>
+<!-- Loader -->
+<div id="loader" aria-hidden="false">
+  <div class="spinner" aria-hidden="true"></div>
+  <div style="margin-top:14px;font-size:1rem;color:#fff;opacity:.95">Loading Romanian Guide…</div>
+</div>
+
+<!-- background blobs -->
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
+
+<!-- gentle sparkles -->
+<script>
+  for(let i=0;i<18;i++){
+    const s=document.createElement('div');s.className='spark';
+    s.style.left=(Math.random()*100)+'vw'; s.style.top=(Math.random()*100)+'vh';
+    s.style.animationDuration=(6+Math.random()*7)+'s'; s.style.opacity=(0.06+Math.random()*0.2);
+    document.body.appendChild(s);
+  }
+</script>
+
+<!-- top controls -->
+<div class="top-controls" role="toolbar" aria-label="top controls">
+  <div class="icon-btn" id="settingsBtn" title="Open settings">⚙️</div>
+  <div class="icon-btn" id="musicToggle" title="Toggle music">🔈</div>
+  <div class="icon-btn" id="achieveBtn" title="Achievements">🏆</div>
+  <div class="icon-btn" id="gamesBtn" title="Open games">🎮</div>
+</div>
+
+<!-- mascot (improved) -->
+<div class="mascot" id="mascot" title="Mascot (click)">
+  <div class="face">A</div>
+  <div class="bubble">Tip: Press G to open games</div>
+</div>
+
+<!-- main card -->
+<div class="card" role="main" id="card">
+  <h1 id="greeting">Romanian Guide 🇷🇴</h1>
+  <div id="subtitle">Learn Romanian with fun, modern tools ✨</div>
+
+  <div class="buttons" aria-hidden="false">
+    <a class="button" data-href="crosswords.html">🧩 Crosswords</a>
+    <a class="button" data-href="cheat.html">📘 Cheatsheets</a>
+    <a class="button" data-href="flashcards.html">🃏 Flashcards</a>
+    <a class="button" data-href="gradebook.html">📊 Gradebook</a>
+    <a class="button" data-href="lessons.html">📖 Lessons</a>
+    <a class="button" data-href="arrange.html">🔀 Arrange</a>
+    <a class="button" data-href="stories.html">🕵️‍♂️ Stories</a>
+    <div class="button" id="openGames">🎯 Play Games</div>
+  </div>
+</div>
+
+
+<!-- settings panel -->
+<div class="panel" id="panel" aria-hidden="true">
+  <h3>Settings</h3>
+  <div class="row"><div class="small">Sound effects</div><div class="toggle" id="togSound"><div class="knob"></div></div></div>
+  <div class="row"><div class="small">Music (ambient)</div><div class="toggle" id="togMusic"><div class="knob"></div></div></div>
+  <div class="row"><div class="small">Mascot</div><div class="toggle" id="togMascot"><div class="knob"></div></div></div>
+  <div class="row"><div class="small">Background particles</div><div class="toggle" id="togParticles"><div class="knob"></div></div></div>
+  <div class="row"><div class="small">Achievements</div><div class="toggle" id="togAchievements"><div class="knob"></div></div></div>
+  <div style="margin-top:8px;font-size:.95rem;color:#bfcbe0">Keyboard shortcuts: 1–7 open tools, G opens games</div>
+</div>
+
+<!-- modal backdrop / games modal -->
+<div class="modal-backdrop" id="modal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="gamesTitle">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <h2 id="gamesTitle">Games & Practice</h2>
+      <div class="close" id="closeModal" title="Close">✖️</div>
+    </div>
+    <div style="margin-top:10px" class="game-grid">
+      <div class="game-area" id="gameArea">
+        <div class="controls">
+          <div class="btn-mini" id="backToList" style="display:none">← Back</div>
+          <div class="btn-mini" id="resetGame" style="display:none">Reset</div>
+          <div class="btn-mini" id="muteGame">Mute SFX</div>
+          <div style="flex:1"></div>
+          <div class="small" id="gameScore">Score: 0</div>
+        </div>
+        <!-- dynamic game content goes here -->
+        <div id="gameContent" style="padding:10px;min-height:260px;display:flex;align-items:center;justify-content:center;color:#cfcfe6;font-weight:700">
+          Select a game on the right
+        </div>
+      </div>
+
+      <div class="side">
+        <div style="margin-bottom:8px;font-weight:700">Available Games</div>
+        <div style="display:grid;gap:8px">
+          <button class="btn-mini startGame" data-game="1">1 Whack-a-Word</button>
+          <button class="btn-mini startGame" data-game="2">2 Flashcard Racer</button>
+          <button class="btn-mini startGame" data-game="3">3 Match-the-Pairs</button>
+          <button class="btn-mini startGame" data-game="4">4 Falling Words</button>
+          <button class="btn-mini startGame" data-game="5">5 Grammar Quiz Duel</button>
+          <button class="btn-mini startGame" data-game="6">6 Letter Scramble</button>
+          <button class="btn-mini startGame" data-game="7">7 Hangman</button>
+          <button class="btn-mini startGame" data-game="8">8 Typing Test</button>
+        </div>
+        <hr style="margin:12px 0;border:none;border-top:1px solid rgba(255,255,255,0.06)" />
+        <div class="small">Achievements</div>
+        <div id="achList" style="display:flex;flex-direction:column;gap:6px;margin-top:8px"></div>
+      </div>
     </div>
   </div>
+</div>
 
-  <footer>
-    <p>© 2025 Romanian Guide · Designed by Alessia</p>
-  </footer>
+<!-- Achievements toast -->
+<div class="toast" id="toast">Achievement unlocked</div>
+
+<script>
+/* Utility and state */
+const state = {
+  sfx:true,music:false,mascot:true,particles:true,achievements:true,mutedGame:false,
+  score:0, currentGame:null, audioCtx:null
+};
+const saveSettings = ()=>localStorage.setItem('rg_settings',JSON.stringify({
+  sfx:state.sfx,music:state.music,mascot:state.mascot,particles:state.particles,achievements:state.achievements
+}));
+const loadSettings = ()=>{
+  try{ const v=JSON.parse(localStorage.getItem('rg_settings')||'{}'); Object.assign(state,v);}catch(e){}
+}; loadSettings();
+
+/* Loader */
+window.addEventListener('load',()=>{
+  setTimeout(()=>document.getElementById('loader').style.display='none',300);
+  initUI();
+});
+
+/* WebAudio SFX */
+function ensureAudio(){
+  if(state.audioCtx) return;
+  state.audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+}
+function playBeep(freq=440,dur=0.08,vol=0.07,type='sine'){
+  if(!state.sfx || state.mutedGame) return;
+  try{
+    ensureAudio();
+    const ctx=state.audioCtx;
+    const o=ctx.createOscillator(), g=ctx.createGain();
+    o.type=type; o.frequency.setValueAtTime(freq,ctx.currentTime);
+    g.gain.setValueAtTime(vol,ctx.currentTime);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime + dur);
+  }catch(e){}
+}
+
+/* UI init */
+function initUI(){
+  // apply saved toggles
+  ['Sound effects','Music','Mascot','Background particles','Achievements'].forEach((label,i)=>{
+    const idMap=['togSound','togMusic','togMascot','togParticles','togAchievements'][i];
+    const on = ['sfx','music','mascot','particles','achievements'][i];
+    const el=document.getElementById(idMap);
+    if(state[on]) el.classList.add('on');
+    el.onclick=()=>{
+      el.classList.toggle('on');
+      const now=el.classList.contains('on');
+      state[on]=now;
+      saveSettings();
+      applySettings();
+    }
+  });
+
+  // top control buttons
+  document.getElementById('settingsBtn').onclick=()=>togglePanel();
+  document.getElementById('musicToggle').onclick=()=>toggleMusic();
+  document.getElementById('achieveBtn').onclick=()=>openAchievementsPanel();
+  document.getElementById('gamesBtn').onclick=()=>openGames();
+  document.getElementById('openGames').onclick=()=>openGames();
+  document.querySelectorAll('.button[data-href]').forEach(b=>{
+    b.onclick=()=>{ playBeep(620,0.06,0.06,'triangle'); window.open(b.dataset.href,'_self'); };
+  });
+
+  // mascot click improvements
+  const mascot=document.getElementById('mascot');
+  mascot.style.display = state.mascot ? 'flex' : 'none';
+  mascot.onclick=()=>{
+    playBeep(880,.08,.09,'sawtooth');
+    mascot.classList.toggle('show-bubble');
+    showToast('Hey! Keep up the great practice ✨',1600);
+  };
+
+  // pause bubble after a few seconds
+  mascot.addEventListener('mouseleave',()=> mascot.classList.remove('show-bubble'));
+
+  // games modal
+  document.getElementById('closeModal').onclick=closeGames;
+  document.getElementById('backToList').onclick=renderGameList;
+  document.querySelectorAll('.startGame').forEach(b=>{ b.onclick=()=>startGame(parseInt(b.dataset.game,10)); });
+
+  // keyboard shortcuts
+  document.addEventListener('keydown',e=>{
+    if(document.activeElement.tagName==='INPUT' || document.activeElement.tagName==='TEXTAREA') return;
+    if(e.key>='1' && e.key<='7'){ const i=parseInt(e.key)-1; const btn=document.querySelectorAll('.button')[i]; if(btn) btn.click(); }
+    if(e.key.toLowerCase()==='g') openGames();
+    if(e.key==='Escape') closeGames();
+  });
+
+  // games controls
+  document.getElementById('muteGame').onclick=()=>{
+    state.mutedGame=!state.mutedGame; playBeep(300,.06,.06); document.getElementById('muteGame').textContent = state.mutedGame ? 'Unmute SFX' : 'Mute SFX';
+  }
+  applySettings();
+  loadAchievementsUI();
+  initParallax();
+}
+
+/* Settings panel */
+function togglePanel(){
+  const p=document.getElementById('panel');
+  p.style.display = p.style.display==='block' ? 'none' : 'block';
+}
+
+/* Music toggle (ambient) with simple oscillator loop */
+let musicOsc=null;
+function toggleMusic(){
+  state.music = !state.music; saveSettings(); applySettings(); playBeep(400,0.06,0.06,'sine');
+}
+function applySettings(){
+  // mascot
+  document.getElementById('mascot').style.display = state.mascot ? 'flex' : 'none';
+  // particles visibility
+  document.querySelectorAll('.spark').forEach(s=> s.style.display = state.particles ? 'block' : 'none');
+  // music
+  if(state.music){
+    try{
+      ensureAudio();
+      if(!musicOsc){
+        const ctx = state.audioCtx;
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type='sine'; o.frequency.value=220;
+        g.gain.value=0.02;
+        o.connect(g); g.connect(ctx.destination);
+        o.start();
+        musicOsc={o,g};
+        setInterval(()=>{ if(musicOsc) musicOsc.o.frequency.value = 200 + Math.sin(Date.now()/4000)*30; },900);
+      }
+    }catch(e){}
+  } else {
+    if(musicOsc){ try{ musicOsc.o.stop(); }catch(e){} musicOsc=null; state.audioCtx=null; }
+  }
+}
+
+/* Parallax + card tilt (disabled tilt - main board will not wiggle) */
+function initParallax(){
+  // keep subtle blob parallax but do NOT transform the main card
+  document.addEventListener('mousemove',e=>{
+    const x=(e.clientX - window.innerWidth/2)/50;
+    const y=(e.clientY - window.innerHeight/2)/50;
+    // gentle blob movement only
+    const b1=document.querySelector('.blob1'), b2=document.querySelector('.blob2');
+    if(b1) b1.style.transform = `translate(${x}px, ${-y}px)`;
+    if(b2) b2.style.transform = `translate(${ -x }px, ${ y }px)`;
+  });
+
+  // cursor sparkles (light) - optimized: reuse limited pool
+  const pool=[]; const POOL_SIZE=12;
+  function makeSpark(){ const s=document.createElement('div'); s.className='spark'; s.style.width='6px'; s.style.height='6px'; s.style.opacity='0.12'; document.body.appendChild(s); return s }
+  for(let i=0;i<POOL_SIZE;i++) pool.push(makeSpark());
+  let idx=0;
+  document.addEventListener('mousemove',e=>{
+    if(!state.particles) return;
+    const sp=pool[idx++ % POOL_SIZE];
+    sp.style.left = (e.pageX + (Math.random()*30-15)) + 'px';
+    sp.style.top = (e.pageY + (Math.random()*30-15)) + 'px';
+    sp.style.display='block';
+    setTimeout(()=>sp.style.display='none',700);
+  });
+}
+
+/* Toasts */
+let toastTimer=null;
+function showToast(msg,ms=2200){
+  if(!state.achievements) return;
+  const t=document.getElementById('toast'); t.textContent=msg; t.style.display='block';
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.style.display='none',ms);
+}
+
+/* Achievements management */
+const ACH_KEY='rg_achievements';
+function unlock(id,title){
+  if(!state.achievements) return;
+  const all = JSON.parse(localStorage.getItem(ACH_KEY)||'{}');
+  if(all[id]) return;
+  all[id]={title,ts:Date.now()};
+  localStorage.setItem(ACH_KEY,JSON.stringify(all));
+  loadAchievementsUI();
+  showToast('Achievement unlocked: '+title,3000);
+}
+function loadAchievementsUI(){
+  const box=document.getElementById('achList'); box.innerHTML='';
+  const all=JSON.parse(localStorage.getItem(ACH_KEY)||'{}');
+  Object.keys(all).forEach(k=>{
+    const el=document.createElement('div'); el.style.padding='8px'; el.style.borderRadius='10px';
+    el.style.background='linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))';
+    el.textContent = '🏅 '+all[k].title; box.appendChild(el);
+  });
+}
+
+/* Achievements panel button */
+function openAchievementsPanel(){ togglePanel(); setTimeout(()=> document.getElementById('panel').style.display='block',100); }
+
+/* Games modal */
+function openGames(){ document.getElementById('modal').style.display='flex'; renderGameList(); }
+function closeGames(){ document.getElementById('modal').style.display='none'; stopCurrentGame(); }
+
+/* Game management */
+function renderGameList(){
+  clearGameTimers();
+  document.getElementById('backToList').style.display='none';
+  document.getElementById('resetGame').style.display='none';
+  document.getElementById('gameContent').innerHTML = '<div style="text-align:center">Choose a game from the right to begin.<br><small style="color:#bfcbe0">Keyboard: 1–8 to start a game</small></div>';
+  state.currentGame=null; state.score=0; updateScore();
+}
+function startGame(n){
+  clearGameTimers(); state.currentGame=n; state.score=0; updateScore();
+  document.getElementById('backToList').style.display='inline-block';
+  document.getElementById('resetGame').style.display='inline-block';
+  document.getElementById('resetGame').onclick=()=>startGame(n);
+  const content=document.getElementById('gameContent'); content.innerHTML='';
+  switch(n){
+    case 1: initWhack(content); break;
+    case 2: initRacer(content); break;
+    case 3: initPairs(content); break;
+    case 4: initFalling(content); break;
+    case 5: initQuiz(content); break;
+    case 6: initScramble(content); break;
+    case 7: initHangman(content); break;
+    case 8: initTyping(content); break;
+    default: content.textContent='Not implemented';
+  }
+}
+
+/* Clear timers (centralized) */
+let gameTimers=[]; function clearGameTimers(){ gameTimers.forEach(t=>{ try{ clearInterval(t); clearTimeout(t); }catch(e){} }); gameTimers=[]; }
+function stopCurrentGame(){ clearGameTimers(); state.currentGame=null; }
+
+/* Score UI */
+function updateScore(){ document.getElementById('gameScore').textContent = 'Score: '+state.score; if(state.score>=10) unlock('score10','Scorer 10 pts'); }
+
+/* Expanded Romanian wordlist (no diacritics: use a, i, a, s, t instead of ă î â ș ț) */
+const WORDS = [
+  ['frumos','beautiful'],['paine','bread'],['casa','house'],['masa','table'],
+  ['mere','apple'],['multumesc','thank you'],['iubire','love'],['zambet','smile'],
+  ['fericit','happy'],['noapte','night'],['buna','hello'],['prietene','friend'],
+  ['scoala','school'],['carte','book'],['prieteni','friends'],['oras','city'],
+  ['copil','child'],['lume','world'],['apa','water'],['soare','sun'],['luna','moon'],
+  ['ferma','farm'],['gradina','garden'],['fereastra','window'],['usi','doors'],['muzica','music'],
+  ['calatorie','journey'],['munca','work'],['timp','time'],['familie','family'],['prietena','girlfriend'],
+  ['cuvant','word'],['intrebare','question'],['raspuns','answer'],['drum','road'],['plaja','beach'],
+  ['munte','mountain'],['copaci','trees'],['flori','flowers']
+];
+
+/* Mini-game implementations (optimized & cleaned) */
+
+/* helpers */
+function sample(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function uniqueRandomWords(count){ const out=[]; const used=new Set(); while(out.length<count){ const w=sample(WORDS)[0]; if(!used.has(w)){ used.add(w); out.push(w);} } return out; }
+
+/* 1 - Whack-a-Word: optimized grid, limited DOM updates */
+function initWhack(container){
+  container.style.display='block';
+  const holeArea=document.createElement('div'); holeArea.style.display='grid'; holeArea.style.gridTemplateColumns='repeat(3,1fr)'; holeArea.style.gap='10px';
+  const title = document.createElement('div'); title.className='small'; title.style.marginBottom='10px';
+  container.innerHTML=''; container.appendChild(title); container.appendChild(holeArea);
+  let rounds=0, maxRounds=8;
+  function newRound(){
+    holeArea.innerHTML=''; rounds++;
+    const pair = sample(WORDS); const correct=pair[0], en=pair[1];
+    title.innerHTML=`Select the Romanian for <span style="color:#ffd6d6">${en}</span> — ${rounds}/${maxRounds}`;
+    // pick 8 decoys efficiently
+    const decoys = new Set([correct]);
+    while(decoys.size<9) decoys.add(sample(WORDS)[0]);
+    const arr=[...decoys].sort(()=>Math.random()-0.5);
+    arr.forEach(word=>{
+      const b=document.createElement('button');
+      b.className='button'; b.style.padding='10px'; b.style.fontSize='1rem'; b.textContent = word; holeArea.appendChild(b);
+      b.onclick=()=>{
+        if(word===correct){ state.score+=1; playBeep(880,0.06,0.07,'sine'); }
+        else { state.score = Math.max(0,state.score-1); playBeep(160,0.12,0.08,'square'); }
+        updateScore();
+        if(rounds<maxRounds) newRound(); else { showToast('Whack-a-Word completed!'); unlock('whack','Whack-a-Word Winner'); }
+      };
+    });
+  }
+  newRound();
+}
+
+/* 2 - Flashcard Racer: more robust timer & reuse UI elements */
+function initRacer(container){
+  clearGameTimers(); let timeLeft=7; state.score=0; let running=true;
+  const timer = document.createElement('div'); timer.className='small';
+  const qbox = document.createElement('div'); qbox.style.marginTop='12px'; qbox.style.fontWeight='900'; qbox.style.fontSize='1.4rem';
+  const choices = document.createElement('div'); choices.style.display='grid'; choices.style.gridTemplateColumns='repeat(2,1fr)'; choices.style.gap='8px'; choices.style.marginTop='10px';
+  container.appendChild(timer); container.appendChild(qbox); container.appendChild(choices);
+  function newCard(){
+    timeLeft = Math.max(4,7 - Math.floor(state.score/3));
+    timer.textContent='Time: '+timeLeft;
+    choices.innerHTML='';
+    const pair=sample(WORDS); qbox.textContent=pair[0];
+    const opts=new Set([pair[1]]);
+    while(opts.size<4) opts.add(sample(WORDS)[1]);
+    [...opts].sort(()=>Math.random()-0.5).forEach(opt=>{
+      const b=document.createElement('button'); b.className='button'; b.style.padding='8px'; b.textContent=opt; choices.appendChild(b);
+      b.onclick=()=>{
+        if(!running) return; if(opt===pair[1]){ state.score+=1; playBeep(900,0.06,0.06); } else { state.score=Math.max(0,state.score-1); playBeep(180,0.08,0.07,'square'); }
+        updateScore(); newCard();
+      };
+    });
+  }
+  newCard();
+  const interval = setInterval(()=>{
+    if(!running) return; timeLeft--; timer.textContent='Time: '+timeLeft;
+    if(timeLeft<=0){ running=false; clearInterval(interval); showToast('Flashcard Racer done'); unlock('racer','Flashcard Racer'); }
+  },1000);
+  gameTimers.push(interval);
+}
+
+/* 3 - Match-the-Pairs (optimized event handling) */
+function initPairs(container){
+  const pairs = uniqueRandomWords(8).map((p,i)=>({ro:p, en:WORDS.find(w=>w[0]===p)[1], id:i}));
+  const cards = [];
+  pairs.forEach(p=>{ cards.push({type:'ro',txt:p.ro,id:p.id}); cards.push({type:'en',txt:p.en,id:p.id}); });
+  cards.sort(()=>Math.random()-0.5);
+  const grid=document.createElement('div'); grid.style.display='grid'; grid.style.gridTemplateColumns='repeat(4,1fr)'; grid.style.gap='8px';
+  container.appendChild(grid);
+  let first=null, locked=false, matches=0;
+  cards.forEach(c=>{
+    const el=document.createElement('button'); el.className='button'; el.style.padding='16px'; el.textContent='?'; el.dataset.id=c.id; el.dataset.type=c.type;
+    el.onclick=()=>{
+      if(locked || el.classList.contains('revealed')) return;
+      el.textContent = c.txt; el.classList.add('revealed');
+      if(!first) { first={el,c}; playBeep(700,.06,.06); }
+      else {
+        if(first.c.id===c.id && first.c.type !== c.type){ playBeep(1100,.08,.08,'sine'); matches++; first=null; state.score+=2; updateScore(); if(matches===pairs.length){ showToast('Pairs complete'); unlock('pairs','Match Master'); } }
+        else { locked=true; setTimeout(()=>{ el.textContent='?'; first.el.textContent='?'; el.classList.remove('revealed'); first.el.classList.remove('revealed'); first=null; locked=false; playBeep(160,.08,.06,'square'); },600); }
+      }
+    };
+    grid.appendChild(el);
+  });
+}
+
+/* 4 - Falling Words (optimized using pooled elements & rAF) */
+function initFalling(container){
+  container.style.position='relative'; container.innerHTML = '<div style="font-weight:800">Catch the correct translations by clicking them</div><div id="fallArea" style="position:relative;height:260px;margin-top:12px;overflow:hidden"></div>';
+  const fallArea=document.getElementById('fallArea'); let running=true; const pool=[]; const MAX_POOL=10;
+  for(let i=0;i<MAX_POOL;i++){ const el=document.createElement('button'); el.className='button'; el.style.position='absolute'; el.style.padding='8px'; el.style.display='none'; fallArea.appendChild(el); pool.push({el,active:false}); }
+  function getFree(){ return pool.find(p=>!p.active); }
+  function spawn(){
+    const p = sample(WORDS); const ro=p[0], en=p[1];
+    const node = getFree(); if(!node) return; node.active=true; const el=node.el;
+    const pick = Math.random()<0.5 ? ro : sample(WORDS)[0]; el.textContent = pick; el.style.left = (Math.random()*80)+'%'; el.style.top = '-40px'; el.style.display='block';
+    const speed = 2500 + Math.random()*2000; const start = performance.now();
+    function frame(now){ const t=(now-start)/speed; el.style.top = (t*320 - 40)+'px'; if(t<1 && running){ node.raf = requestAnimationFrame(frame); } else { node.active=false; el.style.display='none'; el.onclick=null; if(pick===ro && t>=1) { state.score=Math.max(0,state.score-1); updateScore(); } }
+    }
+    node.raf = requestAnimationFrame(frame);
+    el.onclick=()=>{ if(pick===ro){ state.score+=1; playBeep(880,.06,.06); } else { state.score=Math.max(0,state.score-1); playBeep(150,.06,.06,'square'); } updateScore(); cancelAnimationFrame(node.raf); node.active=false; el.style.display='none'; };
+  }
+  const sp = setInterval(()=>{ if(running) spawn(); },650); gameTimers.push(sp);
+  const endT = setTimeout(()=>{ running=false; clearInterval(sp); showToast('Falling Words session ended'); unlock('fall','Falling Catcher'); },35000);
+  gameTimers.push(endT);
+}
+
+/* 5 - Grammar Quiz Duel (same but prepared set) */
+function initQuiz(container){
+  const Q = [
+    {q:'Which is "I am" in Romanian?', opts:['Eu sunt','Tu esti','El e'], ans:0},
+    {q:'How to say "we have"?', opts:['Noi avem','Voi aveti','Ei au'], ans:0},
+    {q:'Plural of "copil" (child)?', opts:['copii','copils','copile'], ans:0},
+    {q:'"Good night" in Romanian?', opts:['Buna dimineata','Noapte buna','Buna seara'], ans:1},
+  ];
+  let idx=0,correct=0;
+  const qdiv=document.createElement('div'); qdiv.style.fontWeight=800; qdiv.style.marginBottom='10px';
+  const choices=document.createElement('div'); choices.style.display='grid'; choices.style.gridTemplateColumns='1fr 1fr'; choices.style.gap='8px';
+  container.appendChild(qdiv); container.appendChild(choices);
+  function next(){
+    if(idx>=Q.length){ container.innerHTML=`Quiz finished — score ${correct}/${Q.length}`; if(correct>=3) unlock('quiz','Grammar Dueler'); return; }
+    const cur=Q[idx]; qdiv.textContent = (idx+1)+'. '+cur.q; choices.innerHTML='';
+    cur.opts.forEach((o,i)=>{ const b=document.createElement('button'); b.className='button'; b.textContent=o; b.onclick=()=>{ if(i===cur.ans){ correct++; playBeep(900,.06,.06); } else playBeep(180,.08,.06,'square'); idx++; next(); }; choices.appendChild(b); });
+  }
+  next();
+}
+
+/* 6 - Letter Scramble (multiple rounds) */
+function initScramble(container){
+  container.innerHTML=''; let rounds=0;
+  const title=document.createElement('div'); title.style.marginBottom='8px';
+  const input=document.createElement('input'); input.style.width='100%'; input.style.marginTop='8px'; input.placeholder='Type your guess';
+  const btn=document.createElement('button'); btn.className='btn-mini'; btn.style.marginTop='8px'; btn.textContent='Submit';
+  const nextBtn=document.createElement('button'); nextBtn.className='btn-mini'; nextBtn.style.marginTop='8px'; nextBtn.style.marginLeft='8px'; nextBtn.textContent='Next';
+  container.appendChild(title); container.appendChild(input); container.appendChild(btn); container.appendChild(nextBtn);
+  function round(){ rounds++; input.value=''; const pair=sample(WORDS); const word=pair[0]; const scrambled = word.split('').sort(()=>Math.random()-0.5).join(''); title.innerHTML=`Unscramble: <span style="color:#ffd6d6">${scrambled}</span> — ${rounds}`; btn.onclick=()=>{ if(input.value.trim()===word){ state.score+=3; playBeep(1000,.08,.08); updateScore(); showToast('Correct!'); unlock('scramble','Scrambler'); } else { playBeep(160,.08,.08,'square'); } }; nextBtn.onclick=()=>round(); }
+  round();
+}
+
+/* 7 - Hangman (plain letters only) */
+function initHangman(container){
+  const pair=sample(WORDS); const answer=pair[0]; let tries=6; let display = Array.from(answer).map(ch=> ch===' ' ? ' ' : '_');
+  const wordDiv=document.createElement('div'); wordDiv.style.letterSpacing='8px'; wordDiv.style.fontSize='1.4rem'; wordDiv.style.marginBottom='10px';
+  const alpha=document.createElement('div'); alpha.style.display='flex'; alpha.style.flexWrap='wrap'; alpha.style.gap='6px';
+  const info=document.createElement('div'); info.className='small'; info.textContent='Tries left: '+tries;
+  container.appendChild(wordDiv); container.appendChild(info); container.appendChild(alpha);
+  function render(){ wordDiv.textContent = display.join(' '); }
+  'abcdefghijklmnopqrstuvwxyz'.split('').forEach(ch=>{
+    const b=document.createElement('button'); b.className='btn-mini'; b.style.textTransform='lowercase'; b.textContent=ch;
+    b.onclick=()=>{
+      b.disabled=true;
+      if(answer.includes(ch)){ for(let i=0;i<answer.length;i++) if(answer[i]===ch) display[i]=ch; playBeep(700,.06,.06); }
+      else { tries--; playBeep(160,.08,.07,'square'); }
+      info.textContent='Tries left: '+tries; render();
+      if(!display.includes('_')){ state.score+=5; unlock('hang','Hangman Hero'); showToast('You win Hangman!'); }
+      if(tries<=0){ info.textContent='Out of tries — answer: '+answer; unlock('hang_lost','Hangman Challenger'); }
+    };
+    alpha.appendChild(b);
+  });
+  render();
+}
+
+/* 8 - Typing Test (immediate feedback) */
+function initTyping(container){
+  const phrase = sample(WORDS)[1] + ' este un cuvant';
+  const q=document.createElement('div'); q.className='small'; q.textContent='Type the sentence:';
+  const phraseDiv=document.createElement('div'); phraseDiv.style.fontWeight=800; phraseDiv.style.margin='8px 0'; phraseDiv.textContent=phrase;
+  const input=document.createElement('input'); input.style.width='100%'; input.placeholder='Start typing...';
+  let start=null; input.oninput=()=>{
+    if(!start) start=Date.now();
+    if(input.value===phrase){ const dt=(Date.now()-start)/1000; state.score+=Math.max(1,Math.round(30/dt)); updateScore(); showToast('Typed in '+dt.toFixed(2)+'s'); unlock('typing','Typing Pro'); }
+  };
+  container.appendChild(q); container.appendChild(phraseDiv); container.appendChild(input);
+}
+
+/* small helper: welcome achievement */
+function maybeUnlockQuick(){ if(!state.achievements) return; unlock('welcome','Welcome Explorer'); }
+
+/* show/hide achievements panel shortcut */
+document.getElementById('achieveBtn').addEventListener('click',()=>{ document.getElementById('panel').style.display = 'block'; });
+
+/* show toast on load for welcome (non-blocking) */
+setTimeout(()=>{ maybeUnlockQuick(); },900);
+
+</script>
 </body>
 </html>
-
