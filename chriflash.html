@@ -23,12 +23,50 @@
     .grid{display:grid;grid-template-columns:1fr 380px;gap:18px}
     .panel{background:var(--card);border-radius:14px;padding:18px;box-shadow:0 6px 24px rgba(0,0,0,0.6)}
 
-    /* Flashcard area */
+    /* Flashcard system */
     .flashcard-area{display:flex;flex-direction:column;gap:12px}
-    .card{height:200px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.04),var(--glass));display:flex;align-items:center;justify-content:center;flex-direction:column;padding:16px;cursor:pointer;transition:transform .35s,box-shadow .25s;backface-visibility:hidden}
-    .card.flipped{transform:rotateY(180deg)}
-    .term{font-size:36px;letter-spacing:.6px}
-    .definition{font-size:20px;color:var(--muted)}
+
+    .card{
+      position:relative;
+      width:100%;
+      height:200px;
+      border-radius:10px;
+      transform-style:preserve-3d;
+      transition:transform .6s ease;
+      cursor:pointer;
+    }
+
+    .card-inner{
+      position:relative;
+      width:100%;
+      height:100%;
+      transform-style:preserve-3d;
+      transition:transform .6s ease;
+    }
+
+    .side{
+      position:absolute;
+      width:100%;
+      height:100%;
+      border-radius:10px;
+      backface-visibility:hidden;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      font-size:36px; /* SAME SIZE ON BOTH SIDES */
+      background:linear-gradient(180deg,rgba(255,255,255,0.04),var(--glass));
+      padding:16px;
+    }
+
+    .back{
+      transform:rotateY(180deg);
+    }
+
+    .card.flipped .card-inner{
+      transform:rotateY(180deg);
+    }
+
     .controls{display:flex;gap:8px;align-items:center}
 
     .sidebar{display:flex;flex-direction:column;gap:14px}
@@ -66,9 +104,17 @@
     <main class="grid">
       <section class="panel">
         <div class="flashcard-area">
+
+          <!-- English FIRST, Romanian BACK -->
           <div id="flashcard" class="card" tabindex="0" aria-live="polite">
-            <div id="term" class="term"></div>
-            <div id="def" class="definition"></div>
+            <div class="card-inner">
+              <div class="side front">
+                <div id="term" class="term"></div> <!-- now ENGLISH -->
+              </div>
+              <div class="side back">
+                <div id="def" class="definition"></div> <!-- now ROMANIAN, same size -->
+              </div>
+            </div>
           </div>
 
           <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
@@ -165,8 +211,13 @@
 
     function renderCard(){
       const i = order[index];
-      termEl.textContent = vocab[i][0];
-      defEl.textContent = vocab[i][1];
+
+      /* ENGLISH FIRST (front) */
+      termEl.textContent = vocab[i][1];
+
+      /* ROMANIAN SECOND (back), SAME SIZE */
+      defEl.textContent = vocab[i][0];
+
       progress.textContent = (index+1) + ' / ' + vocab.length;
       score.textContent = 'Mastered: ' + mastered.size;
       updateListHighlight();
@@ -198,9 +249,23 @@
       });
     }
 
-    document.getElementById('nextBtn').onclick = ()=>{ index=(index+1)%order.length; renderCard(); }
-    document.getElementById('prevBtn').onclick = ()=>{ index=(index-1+order.length)%order.length; renderCard(); }
+    document.getElementById('nextBtn').onclick = ()=>{ 
+      index=(index+1)%order.length; 
+      flashcard.classList.remove('flipped'); 
+      renderCard(); 
+    }
+
+    document.getElementById('prevBtn').onclick = ()=>{ 
+      index=(index-1+order.length)%order.length; 
+      flashcard.classList.remove('flipped'); 
+      renderCard(); 
+    }
+
+    /* CLICK TO FLIP */
+    flashcard.onclick = ()=>{ flashcard.classList.toggle('flipped'); }
+
     document.getElementById('flipBtn').onclick = ()=>{ flashcard.classList.toggle('flipped'); }
+
     document.getElementById('speakBtn').onclick = ()=>{ speak(vocab[order[index]][0]); }
     document.getElementById('againBtn').onclick = ()=>{ mastered.delete(order[index]); saveMastered(); renderCard(); }
     document.getElementById('goodBtn').onclick = ()=>{ mastered.add(order[index]); saveMastered(); renderCard(); }
@@ -221,6 +286,7 @@
         saveMastered(); 
         document.getElementById('typingInput').value=''; 
         index=(index+1)%order.length; 
+        flashcard.classList.remove('flipped');
         renderCard(); 
       } else { alert('Not quite — correct: ' + correct); }
     }
