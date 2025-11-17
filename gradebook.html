@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gradebook</title>
+
+  <!-- jsPDF for PDF export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
+    @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap");
 
     *, *::before, *::after {
       box-sizing: border-box;
@@ -15,7 +19,7 @@
 
     body {
       min-height: 100vh;
-      font-family: 'Outfit', sans-serif;
+      font-family: "Outfit", sans-serif;
       background: linear-gradient(135deg, #2b2d42, #3d405b, #1b1d2c);
       display: flex;
       flex-direction: column;
@@ -27,7 +31,6 @@
       position: relative;
     }
 
-    /* Background blobs */
     .blob {
       position: absolute;
       border-radius: 50%;
@@ -51,29 +54,26 @@
       right: -100px;
       animation-delay: 6s;
     }
-
     @keyframes float {
       0% { transform: translateY(0) translateX(0); }
       100% { transform: translateY(-60px) translateX(40px); }
     }
 
-    /* Card layout */
     .card {
       position: relative;
-      background: rgba(40,44,62,0.85);
+      background: rgba(40, 44, 62, 0.85);
       backdrop-filter: blur(14px);
       border-radius: 28px;
       padding: 30px 25px;
       width: 100%;
       max-width: 750px;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
       text-align: center;
       z-index: 1;
       animation: fadeUp 0.9s ease forwards;
       transform: translateY(40px);
       opacity: 0;
     }
-
     @keyframes fadeUp {
       to { opacity: 1; transform: translateY(0); }
     }
@@ -81,7 +81,7 @@
     h1 {
       font-size: 2.3rem;
       color: #fcd5ce;
-      text-shadow: 0 0 15px rgba(252,213,206,0.7);
+      text-shadow: 0 0 15px rgba(252, 213, 206, 0.7);
       margin-bottom: 10px;
     }
 
@@ -92,7 +92,23 @@
       word-wrap: break-word;
     }
 
-    /* Table styling */
+    .search-box {
+      margin-bottom: 15px;
+    }
+
+    /* search input */
+    #search-input {
+      padding: 10px;
+      width: 100%;
+      max-width: 350px;
+      border-radius: 10px;
+      border: none;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+    }
+
     .table-container {
       width: 100%;
       overflow-x: auto;
@@ -102,7 +118,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      background: rgba(255,255,255,0.05);
+      background: rgba(255, 255, 255, 0.05);
       border-radius: 12px;
       overflow: hidden;
       min-width: 400px;
@@ -113,16 +129,26 @@
       text-align: left;
       color: #eee;
       word-wrap: break-word;
+      cursor: default;
     }
 
-    th {
-      background: rgba(252,213,206,0.2);
-      color: #fff;
+    /* Sortable headers */
+    th.sortable {
+      cursor: pointer;
+      user-select: none;
+    }
+    th.sortable:hover {
+      background: rgba(255,255,255,0.2);
     }
 
     tr:nth-child(even) {
-      background: rgba(255,255,255,0.05);
+      background: rgba(255, 255, 255, 0.05);
     }
+
+    /* NEW: Grade color coding */
+    .grade-green { color: #8aff8a; font-weight: 600; }
+    .grade-yellow { color: #ffe28a; font-weight: 600; }
+    .grade-red { color: #ff8a8a; font-weight: 600; }
 
     #final-grade {
       font-size: 1.2rem;
@@ -132,7 +158,25 @@
       color: #fcd5ce;
     }
 
-    /* Form styling */
+    /* NEW: gauge */
+    #gauge-container {
+      margin: 15px auto;
+      width: 140px;
+      height: 140px;
+      position: relative;
+    }
+    #gauge {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+    #gauge text {
+      fill: #fff;
+      font-size: 20px;
+      font-weight: 600;
+      transform: rotate(90deg);
+    }
+
     #add-grade-form {
       display: flex;
       flex-wrap: wrap;
@@ -140,7 +184,6 @@
       gap: 10px;
       margin-top: 20px;
     }
-
     #add-grade-form input {
       padding: 10px;
       border-radius: 8px;
@@ -149,7 +192,6 @@
       min-width: 130px;
       flex: 1 1 120px;
     }
-
     #add-grade-form button {
       padding: 10px 20px;
       border-radius: 18px;
@@ -162,12 +204,6 @@
       transition: all 0.25s ease;
     }
 
-    #add-grade-form button:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-    }
-
-    /* Back button */
     .back-button {
       display: inline-block;
       margin-bottom: 20px;
@@ -177,28 +213,18 @@
       text-decoration: none;
       color: #222;
       background: linear-gradient(135deg, #cdb4db, #a2d2ff);
-      box-shadow: 0 6px 15px rgba(0,0,0,0.25);
-      transition: all 0.25s ease;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
     }
 
-    .back-button:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.35);
-    }
-
-    /* Responsive tweaks */
     @media (max-width: 600px) {
       h1 { font-size: 1.8rem; }
       h2 { font-size: 1rem; }
       th, td { font-size: 0.9rem; padding: 8px; }
-      #add-grade-form input, #add-grade-form button {
-        font-size: 0.9rem;
-        padding: 8px;
-      }
       .card { padding: 20px; }
     }
   </style>
 </head>
+
 <body>
   <div class="blob blob1"></div>
   <div class="blob blob2"></div>
@@ -209,12 +235,17 @@
     <h1>Gradebook</h1>
     <h2>Student: Fiance Alexander</h2>
 
+    <!-- NEW FEATURE: Search bar -->
+    <div class="search-box">
+      <input id="search-input" placeholder="Search subjects..." />
+    </div>
+
     <div class="table-container">
       <table id="grades-table">
         <thead>
           <tr>
-            <th>Subject</th>
-            <th>Grade</th>
+            <th class="sortable" data-sort="subject">Subject ⬍</th>
+            <th class="sortable" data-sort="grade">Grade ⬍</th>
           </tr>
         </thead>
         <tbody>
@@ -226,50 +257,155 @@
           <tr><td>6. Let's talk about food</td><td>91</td></tr>
           <tr><td>7. Conjugations</td><td>97</td></tr>
           <tr><td>8. MIDTERM EXAM</td><td>100</td></tr>
-           <tr><td>9. Family</td><td>97</td></tr>
+          <tr><td>9. Family</td><td>97</td></tr>
         </tbody>
       </table>
     </div>
 
     <div id="final-grade">Final Grade: </div>
 
+    <!-- NEW: Circular Grade Gauge -->
+    <div id="gauge-container">
+      <svg id="gauge" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="45" stroke="#555" stroke-width="10" fill="none" />
+        <circle id="gauge-progress" cx="50" cy="50" r="45" stroke="#a2d2ff" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="282" stroke-dashoffset="282"/>
+        <text x="50" y="57" text-anchor="middle" id="gauge-text">0</text>
+      </svg>
+    </div>
+
+    <!-- NEW FEATURE: Export to PDF -->
+    <button id="export-pdf" style="margin-top:15px;">Export as PDF</button>
+
     <form id="add-grade-form">
-      <input type="text" id="new-subject" placeholder="Subject" required>
-      <input type="number" id="new-grade" placeholder="Grade" min="0" max="100" required>
+      <input type="text" id="new-subject" placeholder="Subject" required />
+      <input type="number" id="new-grade" placeholder="Grade" min="0" max="100" required />
       <button type="submit">Add Grade</button>
     </form>
   </div>
 
   <script>
-    function calculateFinalGrade() {
-      const table = document.getElementById("grades-table");
-      const rows = table.querySelectorAll("tbody tr");
-      let total = 0, count = 0;
-      rows.forEach(row => {
-        const grade = parseFloat(row.cells[1].innerText);
-        if(!isNaN(grade)){ total += grade; count++; }
+    function colorizeGrades() {
+      document.querySelectorAll("#grades-table tbody tr").forEach(row => {
+        const td = row.cells[1];
+        const grade = parseInt(td.innerText);
+
+        td.classList.remove("grade-green", "grade-yellow", "grade-red");
+
+        if (grade >= 90) td.classList.add("grade-green");
+        else if (grade >= 75) td.classList.add("grade-yellow");
+        else td.classList.add("grade-red");
       });
-      const avg = count ? (total/count).toFixed(2) : 0;
-      document.getElementById("final-grade").innerText = `Final Grade: ${avg}`;
     }
 
-    document.getElementById("add-grade-form").addEventListener("submit", e=>{
+    function calculateFinalGrade() {
+      const rows = document.querySelectorAll("#grades-table tbody tr");
+      let sum = 0, count = 0;
+
+      rows.forEach(row => {
+        const g = parseFloat(row.cells[1].innerText);
+        if (!isNaN(g)) { sum += g; count++; }
+      });
+
+      const avg = count ? (sum / count).toFixed(2) : 0;
+      document.getElementById("final-grade").innerText = `Final Grade: ${avg}`;
+
+      animateGauge(avg);
+      colorizeGrades();
+    }
+
+    /* NEW: Animated gauge */
+    function animateGauge(value) {
+      const circle = document.getElementById("gauge-progress");
+      const text   = document.getElementById("gauge-text");
+
+      const max = 282;
+      const offset = max - (value / 100) * max;
+
+      circle.style.transition = "stroke-dashoffset 1s ease";
+      circle.style.strokeDashoffset = offset;
+
+      text.textContent = value;
+    }
+
+    /* NEW: Search live filter */
+    document.getElementById("search-input").addEventListener("input", e => {
+      const filter = e.target.value.toLowerCase();
+      document.querySelectorAll("#grades-table tbody tr").forEach(row => {
+        const subject = row.cells[0].innerText.toLowerCase();
+        row.style.display = subject.includes(filter) ? "" : "none";
+      });
+    });
+
+    /* NEW: Sortable columns */
+    document.querySelectorAll("th.sortable").forEach(th => {
+      th.addEventListener("click", () => {
+        const type = th.dataset.sort;
+        const rows = Array.from(document.querySelectorAll("#grades-table tbody tr"));
+        const asc = th.dataset.asc === "true";
+
+        rows.sort((a, b) => {
+          const A = type === "grade" ? parseFloat(a.cells[1].innerText) : a.cells[0].innerText.toLowerCase();
+          const B = type === "grade" ? parseFloat(b.cells[1].innerText) : b.cells[0].innerText.toLowerCase();
+          return asc ? (A > B ? 1 : -1) : (A < B ? 1 : -1);
+        });
+
+        th.dataset.asc = !asc;
+        const tbody = document.querySelector("#grades-table tbody");
+        rows.forEach(r => tbody.appendChild(r));
+      });
+    });
+
+    /* NEW: Export to PDF */
+    document.getElementById("export-pdf").addEventListener("click", () => {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.text("Gradebook - Fiance Alexander", 10, 10);
+
+      let y = 20;
+      document.querySelectorAll("#grades-table tbody tr").forEach(row => {
+        const sub = row.cells[0].innerText;
+        const grade = row.cells[1].innerText;
+        doc.text(`${sub}: ${grade}`, 10, y);
+        y += 8;
+      });
+
+      const avg = document.getElementById("final-grade").innerText;
+      doc.text(avg, 10, y + 10);
+
+      doc.save("gradebook.pdf");
+    });
+
+    /* Add new rows */
+    document.getElementById("add-grade-form").addEventListener("submit", e => {
       e.preventDefault();
+
       const subject = document.getElementById("new-subject").value;
       const grade = document.getElementById("new-grade").value;
-      if(subject && grade){
-        const tbody = document.querySelector("#grades-table tbody");
-        const newRow = document.createElement("tr");
-        newRow.innerHTML = `<td>${subject}</td><td>${grade}</td>`;
-        tbody.appendChild(newRow);
+
+      if (subject && grade) {
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${subject}</td><td>${grade}</td>`;
+        document.querySelector("#grades-table tbody").appendChild(row);
+
         document.getElementById("new-subject").value = "";
         document.getElementById("new-grade").value = "";
+
+        calculateFinalGrade();
+        colorizeGrades();
       }
     });
 
-    const observer = new MutationObserver(calculateFinalGrade);
+    /* observe changes */
+    const observer = new MutationObserver(() => {
+      calculateFinalGrade();
+      colorizeGrades();
+    });
     observer.observe(document.querySelector("#grades-table tbody"), { childList: true, subtree: true });
+
     calculateFinalGrade();
+    colorizeGrades();
   </script>
 </body>
 </html>
+
